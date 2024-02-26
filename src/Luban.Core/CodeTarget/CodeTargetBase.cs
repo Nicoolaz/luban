@@ -42,7 +42,7 @@ public abstract class CodeTargetBase : ICodeTarget
         tasks.Add(Task.Run(() =>
         {
             var writer = new CodeWriter();
-            GenerateTables(ctx, ctx.ExportTables, writer);
+            GenerateTables(ctx, ctx.Tables, writer);
             return new OutputFile() { File = $"{GetFileNameWithoutExtByTypeName(ctx.Target.Manager)}.{FileSuffixName}", Content = writer.ToResult(FileHeader) };
         }));
 

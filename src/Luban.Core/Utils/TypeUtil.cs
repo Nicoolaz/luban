@@ -221,11 +221,16 @@ public static class TypeUtil
         return char.ToUpper(s[0]) + s.Substring(1);
     }
 
+    public static string LowerCaseFirstChar(string s)
+    {
+        return char.ToLower(s[0]) + s.Substring(1);
+    }
+
     public static string ToCamelCase(string name)
     {
         var words = name.Split('_').Where(s => !string.IsNullOrWhiteSpace(s)).ToArray();
         var s = new StringBuilder();
-        s.Append(words[0]);
+        s.Append(LowerCaseFirstChar(words[0]));
         for (int i = 1; i < words.Length; i++)
         {
             s.Append(UpperCaseFirstChar(words[i]));

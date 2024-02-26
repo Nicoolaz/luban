@@ -66,6 +66,12 @@ internal static class Program
 
         [Option('v', "verbose", Required = false, HelpText = "verbose")]
         public bool Verbose { get; set; }
+        
+        [Option("generateDefTables", Required = false, HelpText = "generate config file for defined tables")]
+        public bool GenerateDefTables { get; set; }
+        
+        [Option("defTableFileName", Required = false, HelpText = "file name for defined tables")]
+        public string DefTablesFileName { get; set; }
     }
 
     private static ILogger s_logger;
@@ -208,6 +214,8 @@ internal static class Program
             IncludeTags = opts.IncludeTags?.ToList() ?? new List<string>(),
             ExcludeTags = opts.ExcludeTags?.ToList() ?? new List<string>(),
             TimeZone = opts.TimeZone,
+            GenerateDefTables = opts.GenerateDefTables,
+            DeftableFileName = opts.DefTablesFileName ?? "defined_table_config",
         };
     }
 

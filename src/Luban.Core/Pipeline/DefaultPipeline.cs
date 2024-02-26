@@ -1,3 +1,4 @@
+using System.Text;
 using Luban.CodeTarget;
 using Luban.DataTarget;
 using Luban.Defs;
@@ -5,6 +6,7 @@ using Luban.OutputSaver;
 using Luban.PostProcess;
 using Luban.RawDefs;
 using Luban.Schema;
+using Luban.Utils;
 using Luban.Validator;
 using NLog;
 
@@ -35,6 +37,7 @@ public class DefaultPipeline : IPipeline
         LoadSchema();
         PrepareGenerationContext();
         ProcessTargets();
+        
     }
 
     protected void LoadSchema()
@@ -108,9 +111,68 @@ public class DefaultPipeline : IPipeline
                 tasks.Add(Task.Run(() => ProcessDataTarget(mission, dataExporter, dataTarget)));
             }
         }
+        
+        if (_args.GenerateDefTables)
+        {
+            //todo Generate Defined Tables
+            tasks.Add(Task.Run(()=> ProcessDefTableTarget(_args.DeftableFileName, _defAssembly.TablesByFullName)));
+        }
+        
         Task.WaitAll(tasks.ToArray());
     }
 
+    protected void ProcessDefTableTarget(string name, Dictionary<string, DefTable> tables)
+    {
+        s_logger.Info("process defined table config: begin");
+        var outputManifest = new OutputFileManifest(name, OutputType.Data);
+        
+        StringBuilder content = new StringBuilder();
+        content.AppendLine("{");
+        HashSet<string> names = new HashSet<string>();
+        Dictionary<string, HashSet<string>> excelToDefTables = new Dictionary<string, HashSet<string>>();
+        foreach (var config in tables)
+        {
+            names.Clear();
+            foreach (string input in config.Value.InputFiles)
+            {
+                var (actualFile, subAssetName) = FileUtil.SplitFileAndSheetName(input);
+                string fileName = Path.GetFileNameWithoutExtension(actualFile);
+                names.Add($"{fileName}");
+            }
+
+            foreach (string tableName in names)
+            {
+                if (!excelToDefTables.ContainsKey(tableName))
+                {
+                    excelToDefTables[tableName] = new HashSet<string>();
+                }
+
+                excelToDefTables[tableName].Add($"\"{config.Key}\"");
+                // content.Append($"   \"{tableName}\": \"{config.Key}\"");
+                // if (!tableName.Equals(names.Last()) || !config.Equals(tables.Last()))
+                // {
+                //     content.AppendLine(",");
+                // }
+            }
+        }
+
+        foreach (var pair in excelToDefTables)
+        {
+            content.Append($"   \"{pair.Key}\": [{string.Join(',', pair.Value.ToArray())}]");
+            if (!pair.Equals(excelToDefTables.Last()))
+            {
+                content.AppendLine(",");
+            }
+        }
+
+        content.AppendLine();
+        content.Append("}");
+        
+        outputManifest.AddFile($"{name}.json", content.ToString());
+        Save(outputManifest);
+        
+        s_logger.Info("process defined table config: end");
+    }
     protected void ProcessCodeTarget(string name, ICodeTarget codeTarget)
     {
         s_logger.Info("process code target:{} begin", name);

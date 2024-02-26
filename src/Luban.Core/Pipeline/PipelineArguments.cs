@@ -23,4 +23,8 @@ public class PipelineArguments
     public string TimeZone { get; set; }
 
     public Dictionary<string, object> CustomArgs { get; set; }
+    
+    public bool GenerateDefTables { get; set; }
+    
+    public string DeftableFileName { get; set; }
 }
