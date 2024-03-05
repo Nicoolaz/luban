@@ -108,9 +108,10 @@ public static class SchemaLoaderUtil
         return mode;
     }
 
+    //YK Begin
     public static RawField CreateField(string schemaFile, string name, string type, string group,
         string comment, string tags,
-        bool ignoreNameValidation)
+        bool ignoreNameValidation, string defaultVal = "", string alias = "")
     {
         var f = new RawField()
         {
@@ -119,9 +120,12 @@ public static class SchemaLoaderUtil
             Comment = comment,
             Tags = DefUtil.ParseAttrs(tags),
             NotNameValidation = ignoreNameValidation,
+            DefaultValue = defaultVal,
+            Alias = alias
         };
 
         f.Type = type;
+        
 
         //FillValueValidator(f, refs, "ref");
         //FillValueValidator(f, path, "path"); // (ue4|unity|normal|regex);xxx;xxx
@@ -132,4 +136,5 @@ public static class SchemaLoaderUtil
         //FillValidators(defileFile, "validator", validator, f.Validators);
         return f;
     }
+    //YK End
 }

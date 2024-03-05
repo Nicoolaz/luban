@@ -10,4 +10,11 @@ public class CsharpBinTemplateExtension : ScriptObject
     {
         return type.Apply(BinaryDeserializeVisitor.Ins, bufName, fieldName);
     }
+
+    public static string DeserializeTabtoy(string bufName, string fieldName, TType type)
+    {
+        return type.Apply(BinaryDeserializerTabtoy.Ins, bufName, fieldName);
+    }
+
+    
 }

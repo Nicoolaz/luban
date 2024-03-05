@@ -49,6 +49,12 @@ public class DefBean : DefTypeBase
     public string Sep { get; }
 
     public bool IsValueType { get; }
+    
+    //YK Begin
+    public bool UseDictReader { get; }
+
+    public override string TypeName => Name + (HasTag("IsTableBean") ? "Define" : "");
+    //YK End
 
 
     private List<DefField> _hierarchyExportFields;
@@ -94,6 +100,9 @@ public class DefBean : DefTypeBase
         IsValueType = b.IsValueType;
         Groups = b.Groups;
         TypeMappers = b.TypeMappers is { Count: > 0 } ? b.TypeMappers : null;
+        //YK Add Begin
+        UseDictReader = b.UseDictReader;
+        //YK Add End
     }
 
     protected DefField CreateField(RawField f, int idOffset)

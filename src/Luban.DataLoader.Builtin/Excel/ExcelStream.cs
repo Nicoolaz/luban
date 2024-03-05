@@ -227,6 +227,13 @@ class ExcelStream
         LastReadIndex = _curIndex - 1;
         throw new Exception($"cell:{_datas[_curIndex - 1]} 缺少数据");
     }
+    
+    //YK Begin
+    public Cell ReadCellMayNull()
+    {
+        return _curIndex <= _toIndex ? _datas[LastReadIndex = _curIndex++] : new Cell(0, 0,"");
+    }
+    //YK End
 
     public object ReadSkipNull()
     {

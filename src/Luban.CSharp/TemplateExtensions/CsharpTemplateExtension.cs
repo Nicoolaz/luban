@@ -14,6 +14,21 @@ public class CsharpTemplateExtension : ScriptObject
         return type.Apply(DeclaringTypeNameVisitor.Ins);
     }
 
+    public static string DeclaringTypeNameTabtoy(TType type)
+    {
+        return type.Apply(DeclaringTypeNameVisitorTabtoy.Ins);
+    }
+
+    public static string DeclaringKeyTypeNameTabtoy(TType type)
+    {
+        return type.Apply(DeclaringKeyTypeNameVisitorTabtoy.Ins);
+    }
+
+    public static string DeclaringKeyFieldNameTabtoy(TType type, string fieldRoot, string fieldName)
+    {
+        return type.Apply(DeclaringKeyFieldNameVisitorTabtoy.Ins, fieldRoot, fieldName);
+    }
+
     public static string DeclaringCollectionRefName(TType type)
     {
         return type.Apply(DeclaringCollectionRefNameVisitor.Ins);

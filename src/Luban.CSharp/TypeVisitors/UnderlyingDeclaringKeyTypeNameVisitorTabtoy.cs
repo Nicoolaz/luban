@@ -4,9 +4,9 @@ using Luban.Utils;
 
 namespace Luban.CSharp.TypeVisitors;
 
-public class UnderlyingDeclaringTypeNameVisitor : ITypeFuncVisitor<string>
+public class UnderlyingDeclaringKeyTypeNameVisitorTabtoy : ITypeFuncVisitor<string>
 {
-    public static UnderlyingDeclaringTypeNameVisitor Ins { get; } = new();
+    public static UnderlyingDeclaringKeyTypeNameVisitorTabtoy Ins { get; } = new();
 
     public string Accept(TBool type)
     {
@@ -55,7 +55,9 @@ public class UnderlyingDeclaringTypeNameVisitor : ITypeFuncVisitor<string>
 
     public string Accept(TBean type)
     {
-        return type.DefBean.TypeNameWithTypeMapper() ?? (type.DefBean.FullName);
+        //return type.DefBean.TypeNameWithTypeMapper() ?? (type.DefBean.FullTypeName);
+        var fileds = type.DefBean.Fields.Select(f => $"{f.Type} {f.Name}");
+        return $"({string.Join(',', fileds)})";
     }
 
     public string Accept(TArray type)

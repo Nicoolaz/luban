@@ -85,7 +85,7 @@ public class DefaultPipeline : IPipeline
     protected void ProcessTargets()
     {
         var tasks = new List<Task>();
-        tasks.Add(Task.Run(() =>
+         tasks.Add(Task.Run(() =>
         {
             foreach (string target in _args.CodeTargets)
             {

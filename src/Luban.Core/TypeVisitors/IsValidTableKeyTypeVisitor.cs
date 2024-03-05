@@ -11,10 +11,10 @@ class IsValidTableKeyTypeVisitor : AllTrueVisitor
         return false;
     }
 
-    public override bool Accept(TBean type)
-    {
-        return false;
-    }
+    // public override bool Accept(TBean type)
+    // {
+    //     return false;
+    // }
 
     public override bool Accept(TArray type)
     {

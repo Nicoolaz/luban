@@ -10,9 +10,17 @@ public abstract class DefTypeBase
 
     public string Name { get; set; }
 
+    //YK Begin
+    public virtual string TypeName => Name;
+    //YK End
+
     public string Namespace { get; set; }
 
     public string FullName => TypeUtil.MakeFullName(Namespace, Name);
+    
+    //YK Begin
+    public string FullTypeName => TypeUtil.MakeFullName(Namespace, TypeName);
+    //YK End
 
     public string NamespaceWithTopModule => TypeUtil.MakeNamespace(GenerationContext.Current.TopModule, Namespace);
 

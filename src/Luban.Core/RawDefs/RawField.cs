@@ -13,4 +13,10 @@ public class RawField
     public bool NotNameValidation { get; set; }
 
     public List<string> Groups { get; set; }
+    
+    //YK Begin
+    public string DefaultValue { get; set; }
+    
+    public string Alias { get; set; }
+    //YK End
 }

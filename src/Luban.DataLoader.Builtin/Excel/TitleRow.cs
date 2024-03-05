@@ -99,6 +99,20 @@ class TitleRow
         }
     }
 
+    //YK Begin
+    public DictReader AsDict(string sep)
+    {
+        if (string.IsNullOrEmpty(sep))
+        {
+            throw new NotSupportedException("Dict must have seps");
+        }
+        else
+        {
+            return new DictReader(Row, SelfTitle.FromIndex, SelfTitle.ToIndex, sep, SelfTitle.Default);
+        }
+    }
+    //YK End
+
     public bool HasSubFields => Fields != null || Elements != null;
 
     public TitleRow(Title selfTitle, List<Cell> row)

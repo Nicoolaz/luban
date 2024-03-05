@@ -29,8 +29,9 @@ class ExcelStreamDataCreator : ITypeFuncVisitor<ExcelStream, DType>
 
     public DType Accept(TBool type, ExcelStream x)
     {
-
-        var d = x.Read();
+        //YK Begin
+        var d = x.Read(type.IsNullable);
+        //YK End
         if (CheckNull(type.IsNullable, d))
         {
             return null;
@@ -40,7 +41,9 @@ class ExcelStreamDataCreator : ITypeFuncVisitor<ExcelStream, DType>
 
     public DType Accept(TByte type, ExcelStream x)
     {
-        var d = x.Read();
+        //YK Begin
+        var d = x.Read(type.IsNullable);
+        //YK End
         if (CheckNull(type.IsNullable, d))
         {
             return null;
@@ -54,7 +57,9 @@ class ExcelStreamDataCreator : ITypeFuncVisitor<ExcelStream, DType>
 
     public DType Accept(TShort type, ExcelStream x)
     {
-        var d = x.Read();
+        //YK Begin
+        var d = x.Read(type.IsNullable);
+        //YK End
         if (CheckNull(type.IsNullable, d))
         {
             return null;
@@ -68,7 +73,9 @@ class ExcelStreamDataCreator : ITypeFuncVisitor<ExcelStream, DType>
 
     public DType Accept(TInt type, ExcelStream x)
     {
-        var d = x.Read();
+        //YK Begin
+        var d = x.Read(type.IsNullable);
+        //YK End
         if (CheckNull(type.IsNullable, d))
         {
             return null;
@@ -90,7 +97,9 @@ class ExcelStreamDataCreator : ITypeFuncVisitor<ExcelStream, DType>
 
     public DType Accept(TLong type, ExcelStream x)
     {
-        var d = x.Read();
+        //YK Begin
+        var d = x.Read(type.IsNullable);
+        //YK End
         if (CheckNull(type.IsNullable, d))
         {
             return null;
@@ -112,7 +121,9 @@ class ExcelStreamDataCreator : ITypeFuncVisitor<ExcelStream, DType>
 
     public DType Accept(TFloat type, ExcelStream x)
     {
-        var d = x.Read();
+        //YK Begin
+        var d = x.Read(type.IsNullable);
+        //YK End
         if (CheckNull(type.IsNullable, d))
         {
             return null;
@@ -126,7 +137,9 @@ class ExcelStreamDataCreator : ITypeFuncVisitor<ExcelStream, DType>
 
     public DType Accept(TDouble type, ExcelStream x)
     {
-        var d = x.Read();
+        //YK Begin
+        var d = x.Read(type.IsNullable);
+        //YK End
         if (CheckNull(type.IsNullable, d))
         {
             return null;
@@ -140,7 +153,9 @@ class ExcelStreamDataCreator : ITypeFuncVisitor<ExcelStream, DType>
 
     public DType Accept(TEnum type, ExcelStream x)
     {
-        var d = x.Read();
+        //YK Begin
+        var d = x.Read(type.IsNullable);
+        //YK End
         if (CheckNull(type.IsNullable, d))
         {
             return null;
@@ -154,7 +169,9 @@ class ExcelStreamDataCreator : ITypeFuncVisitor<ExcelStream, DType>
 
     public DType Accept(TString type, ExcelStream x)
     {
-        var d = x.Read();
+        //YK Begin
+        var d = x.Read(type.IsNullable);
+        //YK End
         var s = ParseString(d);
         if (s == null)
         {
@@ -178,6 +195,9 @@ class ExcelStreamDataCreator : ITypeFuncVisitor<ExcelStream, DType>
         }
         else if (d is string s)
         {
+            //YK Begin
+            s = s.TrimStart('\"').TrimEnd('\"');
+            //YK End
             return DataUtil.UnEscapeRawString(s);
         }
         else
@@ -188,7 +208,9 @@ class ExcelStreamDataCreator : ITypeFuncVisitor<ExcelStream, DType>
 
     public DType Accept(TDateTime type, ExcelStream x)
     {
-        var d = x.Read();
+        //YK Begin
+        var d = x.Read(type.IsNullable);
+        //YK End
         if (CheckNull(type.IsNullable, d))
         {
             return null;
@@ -235,6 +257,9 @@ class ExcelStreamDataCreator : ITypeFuncVisitor<ExcelStream, DType>
     public DType Accept(TBean type, ExcelStream x)
     {
         var originBean = type.DefBean;
+        if (originBean.UseDictReader)
+            return ParseByDict(type, x);
+        
         if (!string.IsNullOrEmpty(originBean.Sep))
         {
             x = new ExcelStream(x.ReadCell(), originBean.Sep);
@@ -332,4 +357,101 @@ class ExcelStreamDataCreator : ITypeFuncVisitor<ExcelStream, DType>
         }
         return new DMap(type, datas);
     }
+
+    // YK Add
+    private List<DType> CreateBeanFields(DefBean bean, DictReader dict)
+    {
+        var list = new List<DType>();
+        foreach (DefField f in bean.HierarchyFields)
+        {
+            try
+            {
+                //string sep = f.Tags.TryGetValue("tag", out var s) ? s : null;
+                //if (string.IsNullOrWhiteSpace(sep))
+                //{
+                if (!string.IsNullOrEmpty((string)dict[f.Name].Value))
+                {
+                    list.Add(f.CType.Apply(this, new ExcelStream(dict[f.Name], "")));
+                }
+                else if (!string.IsNullOrEmpty((string)dict[f.RawField.Alias].Value))
+                {
+                    list.Add(f.CType.Apply(this, new ExcelStream(dict[f.RawField.Alias], "")));
+                }
+                else if(!string.IsNullOrEmpty(f.RawField.DefaultValue))
+                {
+                    list.Add(f.CType.Apply(this, new ExcelStream(new Cell(0, 0, f.RawField.DefaultValue), "")));
+                }
+                else
+                {
+                    list.Add(f.CType.Apply(this, new ExcelStream(new Cell(0, 0, ""), "")));
+                    //throw new FormatException($"Bean {bean.FullName} format error, 找不到字段{f.Name}");
+                }
+                
+                //}
+                //else
+                //{
+                //    list.Add(f.CType.Apply(this, new ExcelStream(stream.ReadCell(), sep)));
+                //}
+            }
+            catch (DataCreateException dce)
+            {
+                dce.Push(bean, f);
+                throw;
+            }
+            catch (Exception e)
+            {
+                var dce = new DataCreateException(e, "");
+                dce.Push(bean, f);
+                throw dce;
+            }
+        }
+        return list;
+    }
+    
+    public DType ParseByDict(TBean type, ExcelStream x)
+    {
+        DefBean originBean = type.DefBean;
+        DictReader d;
+        if (!string.IsNullOrEmpty(originBean.Sep))
+        {
+            d = new DictReader(x.ReadCellMayNull(), originBean.Sep);
+        }
+        else
+        {
+            d = new DictReader(x.ReadCellMayNull(), " :");
+        }
+
+        if (originBean.IsAbstractType)
+        {
+            string subType = d.Read().ToString();
+            if (subType.ToLower().Trim() == FieldNames.BeanNullType)
+            {
+                if (!type.IsNullable)
+                {
+                    throw new InvalidExcelDataException($"type:{originBean.FullName}不是可空类型. 不能为空");
+                }
+                return null;
+            }
+            DefBean implType = DataUtil.GetImplTypeByNameOrAlias(originBean, subType);
+            return new DBean(type, implType, CreateBeanFields(implType, d));
+        }
+        else
+        {
+            if (type.IsNullable)
+            {
+                string subType = d.Read().ToString().Trim();
+                if (subType == FieldNames.BeanNullType)
+                {
+                    return null;
+                }
+                else if (subType != FieldNames.BeanNotNullType && subType != originBean.Name)
+                {
+                    throw new Exception($"type:'{originBean.FullName}' 可空标识:'{subType}' 不合法（只能为{FieldNames.BeanNotNullType}或{FieldNames.BeanNullType}或{originBean.Name})");
+                }
+            }
+            return new DBean(type, originBean, CreateBeanFields(originBean, d));
+        }
+        return null;
+    }
+    // YK End
 }

@@ -26,10 +26,13 @@ public class BeanSchemaFromExcelHeaderLoader : IBeanSchemaLoader
             Fields = new(),
         };
 
+        cb.Tags = new Dictionary<string, string>();
+        cb.Tags["IsTableBean"] = "true";
+
         (var actualFile, var sheetName) = FileUtil.SplitFileAndSheetName(FileUtil.Standardize(fileName));
         using var inputStream = new FileStream(actualFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
         var tableDefInfo = SheetLoadUtil.LoadSheetTableDefInfo(actualFile, sheetName, inputStream);
-
+        
         foreach (var (name, f) in tableDefInfo.FieldInfos)
         {
             var cf = new RawField()

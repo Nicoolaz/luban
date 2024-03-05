@@ -212,7 +212,7 @@ public class ExcelSchemaLoader : SchemaLoaderBase
             Parent = "",
             Alias = "",
             IsValueType = false,
-            Sep = "",
+            Sep = "", 
             Fields = new List<RawField>
             {
                 new() { Name = "name", Type = "string" },
@@ -220,6 +220,10 @@ public class ExcelSchemaLoader : SchemaLoaderBase
                 new() { Name = "group", Type = "string" },
                 new() { Name = "comment", Type = "string" },
                 new() { Name = "tags", Type = "string" },
+                //YK Begin
+                new() { Name = "default", Type = "string" },
+                new() { Name = "alias", Type = "string" }
+                //YK End
             }
         })
         {
@@ -251,6 +255,9 @@ public class ExcelSchemaLoader : SchemaLoaderBase
                 new() { Name = "tags", Type = "string" },
                 new() { Name = "group", Type = "string" },
                 new() { Name = "fields", Type = "list,__FieldInfo__" },
+                // YK Begin
+                new() { Name = "useDictReader", Type = "bool"}
+                // YK End
             }
         })
         {
@@ -294,6 +301,9 @@ public class ExcelSchemaLoader : SchemaLoaderBase
                 Tags = DefUtil.ParseAttrs(tags),
                 Groups = SchemaLoaderUtil.CreateGroups(group),
                 Parent = parent,
+                //YK Begin
+                UseDictReader = ((DBool)data.GetField("useDictReader")).Value,
+                //YK End
                 Fields = fields.Datas.Select(d => (DBean)d).Select(b => SchemaLoaderUtil.CreateField(
                     fileName,
                     (b.GetField("name") as DString).Value.Trim(),
@@ -301,7 +311,11 @@ public class ExcelSchemaLoader : SchemaLoaderBase
                     (b.GetField("group") as DString).Value,
                     (b.GetField("comment") as DString).Value.Trim(),
                     (b.GetField("tags") as DString).Value.Trim(),
-                    false
+                    false,
+                    // YK Add
+                    (b.GetField("default") as DString).Value.Trim(),
+                    (b.GetField("alias") as DString).Value.Trim()
+                    // YK End
                 )).ToList(),
             };
             Collector.Add(curBean);

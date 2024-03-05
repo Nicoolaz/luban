@@ -29,9 +29,13 @@ public class DBean : DType
         return obj is DBean d && string.Equals(ImplType?.FullName, d.ImplType?.FullName) && DataUtil.IsCollectionEqual(Fields, d.Fields);
     }
 
+    
     public override int GetHashCode()
     {
-        throw new System.NotSupportedException();
+        //YK Begin
+        return ToString().GetHashCode();
+        //YK End
+        //throw new System.NotSupportedException();
     }
 
     public override int CompareTo(DType other)

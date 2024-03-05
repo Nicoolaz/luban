@@ -294,7 +294,9 @@ class SheetDataCreator : ITypeFuncVisitor<RowColumnSheet, TitleRow, DType>
         string sep = row.SelfTitle.Sep;// type.GetBeanAs<DefBean>().Sep;
         if (row.Row != null)
         {
-            var s = row.AsStream(sep);
+            //YK Begin
+            var s = type.DefBean.UseDictReader ? row.AsStream("") : row.AsStream(sep);
+            //YK End
             if (type.IsNullable && s.TryReadEOF())
             {
                 return null;

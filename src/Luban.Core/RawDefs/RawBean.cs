@@ -19,6 +19,10 @@ public class RawBean
     public string Alias { get; set; }
 
     public string Sep { get; set; }
+    
+    //YK ADD Begin
+    public bool UseDictReader { get; set; }
+    //YK ADD End
 
     public List<string> Groups { get; set; }
 

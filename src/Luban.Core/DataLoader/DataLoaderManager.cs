@@ -19,14 +19,19 @@ public class DataLoaderManager
 
     public void LoadDatas(GenerationContext ctx)
     {
-        var tasks = ctx.Tables.Select(t => Task.Run(() => LoadTable(ctx, t))).ToArray();
-        Task.WaitAll(tasks);
+        // var tasks = ctx.Tables.Select(t => Task.Run(() => LoadTable(ctx, t))).ToArray();
+        // Task.WaitAll(tasks);
+        foreach (var t in ctx.Tables)
+        {
+            LoadTable(ctx, t);
+        }
     }
 
     private void LoadTable(GenerationContext ctx, DefTable table)
     {
         string inputDataDir = GenerationContext.GetInputDataPath();
         var tasks = new List<Task<List<Record>>>();
+        var records = new List<Record>();
         foreach (var inputFile in table.InputFiles)
         {
             s_logger.Trace("load table:{} file:{}", table.FullName, inputFile);
@@ -35,11 +40,12 @@ public class DataLoaderManager
             foreach (var atomFile in FileUtil.GetFileOrDirectory(Path.Combine(inputDataDir, actualFile)))
             {
                 s_logger.Trace("load table:{} atomfile:{}", table.FullName, atomFile);
-                tasks.Add(Task.Run(() => LoadTableFile(table, atomFile, subAssetName, options)));
+                //tasks.Add(Task.Run(() => LoadTableFile(table, atomFile, subAssetName, options)));
+                records.AddRange(LoadTableFile(table, atomFile, subAssetName, options));
             }
         }
 
-        var records = new List<Record>();
+        
         foreach (var task in tasks)
         {
             records.AddRange(task.Result);

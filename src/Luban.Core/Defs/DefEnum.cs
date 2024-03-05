@@ -82,7 +82,16 @@ public class DefEnum : DefTypeBase
         }
         else
         {
-            throw new Exception($"'{name}' 不是enum:'{FullName}'的有效枚举值");
+            //YK Begin
+            if (_vaule2Name.ContainsKey(0))
+            {
+                return 0;
+            }
+            else
+            {
+                throw new Exception($"'{name}' 不是enum:'{FullName}'的有效枚举值");
+            }
+            //YK End
         }
     }
 
