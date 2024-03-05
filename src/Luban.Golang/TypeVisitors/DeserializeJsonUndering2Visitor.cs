@@ -94,4 +94,11 @@ class DeserializeJsonUndering2Visitor : ITypeFuncVisitor<string, string, string>
     {
         throw new System.NotSupportedException();
     }
+
+    //YK Begin
+    public string Accept(TUint type, string varName, string bufName)
+    {
+        return DeserializeNumber(type, varName, bufName);
+    }
+    //YK End
 }

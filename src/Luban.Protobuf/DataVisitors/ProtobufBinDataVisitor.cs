@@ -61,6 +61,13 @@ public class ProtobufBinDataVisitor : IDataActionVisitor<CodedOutputStream>
     {
         x.WriteString(type.Value);
     }
+    
+    //YK Begin
+    public void Accept(DUint type, CodedOutputStream x)
+    {
+        x.WriteUInt32(type.Value);
+    }
+    //YK End
 
     private MemoryStream AllocMemoryStream()
     {

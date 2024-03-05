@@ -331,6 +331,9 @@ public class DefAssembly
             case "int32":
             case "int":
                 return TInt.Create(nullable, tags);
+            case "uint32":
+            case "uint":
+                return TUint.Create(nullable, tags);
             case "int64":
             case "long":
                 return TLong.Create(nullable, tags, false);

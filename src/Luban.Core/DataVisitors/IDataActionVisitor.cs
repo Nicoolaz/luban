@@ -34,6 +34,10 @@ public interface IDataActionVisitor<T>
     void Accept(DSet type, T x);
 
     void Accept(DMap type, T x);
+
+    //YK Begin
+    void Accept(DUint type, T x);
+    //YK End
 }
 
 public interface IDataActionVisitor<T1, T2>
@@ -67,6 +71,10 @@ public interface IDataActionVisitor<T1, T2>
     void Accept(DSet type, T1 x, T2 y);
 
     void Accept(DMap type, T1 x, T2 y);
+
+    //YK Begin
+    void Accept(DUint type, T1 x, T2 y);
+    //YK End
 }
 
 
@@ -101,6 +109,10 @@ public interface IDataActionVisitor2<T>
     void Accept(DSet data, TType type, T x);
 
     void Accept(DMap data, TType type, T x);
+
+    //YK Begin
+    void Accept(DUint data, TType type, T x);
+    //YK End
 }
 
 public interface IDataActionVisitor2<T1, T2>
@@ -134,4 +146,8 @@ public interface IDataActionVisitor2<T1, T2>
     void Accept(DSet data, TType type, T1 x, T2 y);
 
     void Accept(DMap data, TType type, T1 x, T2 y);
+    
+    //YK Begin
+    void Accept(DUint data, TType type, T1 x, T2 y);
+    //YK End
 }

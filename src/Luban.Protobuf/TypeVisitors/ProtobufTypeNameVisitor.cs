@@ -83,4 +83,11 @@ public class ProtobufTypeNameVisitor : ITypeFuncVisitor<string>
         string key = type.KeyType is TEnum ? "int32" : (type.KeyType.Apply(this));
         return $"map<{key}, {type.ValueType.Apply(this)}>";
     }
+
+    //YK Begin
+    public string Accept(TUint type)
+    {
+        return "uint32";
+    }
+    //YK End
 }

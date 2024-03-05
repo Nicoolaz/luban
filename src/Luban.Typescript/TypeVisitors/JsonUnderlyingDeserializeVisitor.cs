@@ -97,4 +97,11 @@ public class JsonUnderlyingDeserializeVisitor : ITypeFuncVisitor<string, string,
     {
         return $"{fieldName} = new {type.Apply(DeclaringTypeNameVisitor.Ins)}(); for(var _entry{depth}_ of {jsonVarName}) {{ let _k{depth}; {type.KeyType.Apply(this, $"_entry{depth}_[0]", $"_k{depth}", depth + 1)};  let _v{depth};  {type.ValueType.Apply(this, $"_entry{depth}_[1]", $"_v{depth}", depth + 1)}; {fieldName}.set(_k{depth}, _v{depth});  }}";
     }
+
+    //YK Begin
+    public string Accept(TUint type, string jsonVarName, string fieldName, int depth)
+    {
+        return $"{fieldName} = {jsonVarName}";
+    }
+    //YK End
 }

@@ -81,4 +81,11 @@ public class ConstValueVisitor : ITypeFuncVisitor<string, string>
     {
         throw new NotImplementedException();
     }
+
+    //YK Begin
+    public string Accept(TUint type, string x)
+    {
+        return x;
+    }
+    //YK End
 }

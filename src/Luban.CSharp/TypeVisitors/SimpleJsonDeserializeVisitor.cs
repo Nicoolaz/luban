@@ -116,4 +116,11 @@ public class SimpleJsonDeserializeVisitor : ITypeFuncVisitor<string, string, int
         string tempJsonName = __json;
         return @$"{{ var {tempJsonName} = {json}; if(!{tempJsonName}.IsArray) {{ throw new SerializationException(); }} {x} = new {type.Apply(DeclaringTypeNameVisitor.Ins)}({tempJsonName}.Count); foreach(JSONNode {__e} in {tempJsonName}.Children) {{ {type.KeyType.Apply(DeclaringTypeNameVisitor.Ins)} {__k};  {type.KeyType.Apply(this, $"{__e}[0]", __k, depth + 1)} {type.ValueType.Apply(DeclaringTypeNameVisitor.Ins)} {__v};  {type.ValueType.Apply(this, $"{__e}[1]", __v, depth + 1)}  {x}.Add({__k}, {__v}); }}   }}";
     }
+
+    //YK Begin
+    public string Accept(TUint type, string json, string x, int depth)
+    {
+        return $"{{ if(!{json}.IsNumber) {{ throw new SerializationException(); }}  {x} = {json}; }}";
+    }
+    //YK End
 }

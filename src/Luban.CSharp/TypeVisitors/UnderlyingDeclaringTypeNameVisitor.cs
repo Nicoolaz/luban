@@ -78,6 +78,13 @@ public class UnderlyingDeclaringTypeNameVisitor : ITypeFuncVisitor<string>
         return $"{ConstStrings.HashMapTypeName}<{type.KeyType.Apply(this)}, {type.ValueType.Apply(this)}>";
     }
 
+    //YK Begin
+    public string Accept(TUint type)
+    {
+        return "uint";
+    }
+    //YK End
+
     public virtual string Accept(TDateTime type)
     {
         return "long";

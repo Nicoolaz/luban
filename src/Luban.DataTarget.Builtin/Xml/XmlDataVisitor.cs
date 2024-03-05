@@ -63,6 +63,13 @@ public class XmlDataVisitor : IDataActionVisitor<XmlWriter>
         w.WriteValue(type.UnixTimeOfCurrentContext);
     }
 
+    //YK Begin
+    public void Accept(DUint type, XmlWriter w)
+    {
+        w.WriteValue(type.Value);
+    }
+    //YK End
+
     public void Accept(DBean type, XmlWriter w)
     {
         if (type.Type.IsAbstractType)

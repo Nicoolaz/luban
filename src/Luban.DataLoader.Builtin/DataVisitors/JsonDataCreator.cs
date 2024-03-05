@@ -166,6 +166,13 @@ public class JsonDataCreator : ITypeFuncVisitor<JsonElement, DefAssembly, DType>
         return new DMap(type, map);
     }
 
+    //YK Begin
+    public DType Accept(TUint type, JsonElement x, DefAssembly y)
+    {
+        return DUint.ValueOf(x.GetUInt32());
+    }
+    //YK End
+
     public DType Accept(TDateTime type, JsonElement x, DefAssembly ass)
     {
         return DataUtil.CreateDateTime(x.GetString());

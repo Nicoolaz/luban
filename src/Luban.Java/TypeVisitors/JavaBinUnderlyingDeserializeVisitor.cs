@@ -83,6 +83,13 @@ class JavaBinUnderlyingDeserializeVisitor : ITypeFuncVisitor<string, string, str
 
     }
 
+    //YK Begin
+    public string Accept(TUint type, string x, string y)
+    {
+        throw new System.NotSupportedException();
+    }
+    //YK End
+
     public string Accept(TDateTime type, string bufName, string fieldName)
     {
         return $"{fieldName} = {bufName}.readLong();";

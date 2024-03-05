@@ -51,6 +51,13 @@ public class ResDataVisitor : IDataActionVisitor<TType, List<ResourceInfo>>
 
     }
 
+    //YK Begin
+    public void Accept(DUint type, TType x, List<ResourceInfo> y)
+    {
+        
+    }
+    //YK End
+
     public void Accept(DString type, TType x, List<ResourceInfo> y)
     {
         if (!string.IsNullOrEmpty(type.Value) && x.HasTag(ResTagName))

@@ -82,4 +82,11 @@ public class FlatBuffersTypeNameVisitor : ITypeFuncVisitor<string>
     {
         return $"[KeyValue_{type.KeyType.Apply(this)}_{type.ValueType.Apply(this)}]";
     }
+
+    //YK Begin
+    public string Accept(TUint type)
+    {
+        return "uint32";
+    }
+    //YK End
 }

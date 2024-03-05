@@ -56,6 +56,13 @@ public class IsSimpleLiteralDataVisitor : IDataFuncVisitor<bool>
         return true;
     }
 
+    //YK Begin
+    public bool Accept(DUint type)
+    {
+        return true;
+    }
+    //YK End
+
     public bool Accept(DBean type)
     {
         return false;

@@ -205,6 +205,13 @@ class LuaDataCreator : ITypeFuncVisitor<object, DefAssembly, DType>
         return new DMap(type, map);
     }
 
+    //YK Begin
+    public DType Accept(TUint type, object x, DefAssembly ass)
+    {
+        return DUint.ValueOf((uint)x);
+    }
+    //YK End
+
     public DType Accept(TDateTime type, object x, DefAssembly ass)
     {
         return DataUtil.CreateDateTime(x.ToString());

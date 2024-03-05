@@ -6,6 +6,20 @@ namespace Luban.DataLoader.Builtin.DataVisitors;
 
 class StringDataCreator : ITypeFuncVisitor<string, DType>
 {
+    //YK Begin
+    public DType Accept(TUint type, string x)
+    {
+        if (uint.TryParse(x, out var b))
+        {
+            return DUint.ValueOf(b);
+        }
+        else
+        {
+            throw new Exception($"{x} 不是uint类型");
+        }
+    }
+    //YK End
+
     public static StringDataCreator Ins { get; } = new();
 
     public DType Accept(TBool type, string x)

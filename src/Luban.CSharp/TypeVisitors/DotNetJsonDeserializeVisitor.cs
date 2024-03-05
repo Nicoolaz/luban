@@ -111,4 +111,9 @@ public class DotNetJsonDeserializeVisitor : ITypeFuncVisitor<string, string, int
         string __json = $"__json{depth}";
         return @$"{{ var {__json} = {json}; {x} = new {type.Apply(DeclaringTypeNameVisitor.Ins)}({__json}.GetArrayLength()); foreach(JsonElement {__e} in {__json}.EnumerateArray()) {{ {type.KeyType.Apply(DeclaringTypeNameVisitor.Ins)} {__k};  {type.KeyType.Apply(this, $"{__e}[0]", __k, depth + 1)} {type.ValueType.Apply(DeclaringTypeNameVisitor.Ins)} {__v};  {type.ValueType.Apply(this, $"{__e}[1]", __v, depth + 1)}  {x}.Add({__k}, {__v}); }}   }}";
     }
+
+    public string Accept(TUint type, string json, string x, int depth)
+    {
+        return $"{x} = {json}.GetUInt32();";
+    }
 }

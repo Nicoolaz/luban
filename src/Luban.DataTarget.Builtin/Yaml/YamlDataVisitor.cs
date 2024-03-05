@@ -57,6 +57,13 @@ public class YamlDataVisitor : IDataFuncVisitor<YamlNode>
     {
         return ToPlainNode(type.Value.ToString());
     }
+    
+    //YK Begin
+    public YamlNode Accept(DUint type)
+    {
+        return ToPlainNode(type.Value.ToString());
+    }
+    //YK End
 
     public YamlNode Accept(DEnum type)
     {

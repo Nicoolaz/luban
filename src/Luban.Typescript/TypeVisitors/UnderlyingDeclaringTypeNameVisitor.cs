@@ -77,6 +77,13 @@ public class UnderlyingDeclaringTypeNameVisitor : ITypeFuncVisitor<string>
         return $"Map<{type.KeyType.Apply(this)}, {type.ValueType.Apply(this)}>";
     }
 
+    //YK Begin
+    public string Accept(TUint type)
+    {
+        return "number";
+    }
+    //YK End
+
     public string Accept(TDateTime type)
     {
         return "number";

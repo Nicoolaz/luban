@@ -153,6 +153,14 @@ class XmlDataCreator : ITypeFuncVisitor<XElement, DefAssembly, DType>
         return new DMap(type, map);
     }
 
+    //YK Begin
+    public DType Accept(TUint type, XElement x, DefAssembly ass)
+    {
+        return DUint.ValueOf(uint.Parse(x.Value.Trim()));
+    }
+    //YK End
+    
+
     public DType Accept(TDateTime type, XElement x, DefAssembly ass)
     {
         return DataUtil.CreateDateTime(x.Value);

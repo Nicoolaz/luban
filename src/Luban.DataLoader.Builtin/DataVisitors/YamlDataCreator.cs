@@ -171,6 +171,13 @@ class YamlDataCreator : ITypeFuncVisitor<YamlNode, DefAssembly, DType>
         return new DMap(type, map);
     }
 
+    //YK Begin
+    public DType Accept(TUint type, YamlNode x, DefAssembly y)
+    {
+        return DUint.ValueOf(uint.Parse(GetLowerTextValue(x)));
+    }
+    //YK End
+
     public DType Accept(TDateTime type, YamlNode x, DefAssembly y)
     {
         return DataUtil.CreateDateTime(GetLowerTextValue(x));

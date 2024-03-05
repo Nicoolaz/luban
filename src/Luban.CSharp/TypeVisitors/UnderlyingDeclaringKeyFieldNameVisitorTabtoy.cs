@@ -1,3 +1,4 @@
+//YK Add File
 using Luban.Types;
 using Luban.TypeVisitors;
 using Luban.Utils;
@@ -83,6 +84,13 @@ public class UnderlyingDeclaringKeyFieldNameVisitorTabtoy : ITypeFuncVisitor<str
     {
         return _accept(type, fieldRoot, fieldName);
     }
+
+    //YK Begin
+    public string Accept(TUint type, string fieldRoot, string fieldName)
+    {
+        return _accept(type, fieldRoot, fieldName);
+    }
+    //YK End
 
     public virtual string Accept(TDateTime type, string fieldRoot, string fieldName)
     {

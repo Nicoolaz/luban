@@ -59,6 +59,13 @@ public class BinaryDataVisitor : IDataActionVisitor<ByteBuf>
     {
         x.WriteLong(type.UnixTimeOfCurrentContext);
     }
+    
+    //YK Begin
+    public void Accept(DUint type, ByteBuf x)
+    {
+        x.WriteUint(type.Value);
+    }
+    //YK End
 
     public void Accept(DBean type, ByteBuf x)
     {

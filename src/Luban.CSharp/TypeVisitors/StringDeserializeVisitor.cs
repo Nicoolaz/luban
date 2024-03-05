@@ -81,4 +81,11 @@ public class StringDeserializeVisitor : ITypeFuncVisitor<string, string, string>
     {
         throw new NotSupportedException();
     }
+
+    //YK Begin
+    public string Accept(TUint type, string strName, string varName)
+    {
+        return $"{varName} = uint.Parse({strName});";
+    }
+    //YK End
 }

@@ -74,6 +74,13 @@ public abstract class TypeActionVisitorAdaptor<T> : ITypeActionVisitor<T>
 
     }
 
+    //YK Begin
+    public virtual void Accept(TUint type, T x)
+    {
+        
+    }
+    //YK End
+
     public virtual void Accept(TDateTime type, T x)
     {
 

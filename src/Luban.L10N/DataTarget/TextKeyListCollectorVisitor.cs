@@ -54,6 +54,13 @@ public class TextKeyListCollectorVisitor : IDataActionVisitor2<TextKeyCollection
     {
 
     }
+    
+    //YK Begin
+    public void Accept(DUint data, TType type, TextKeyCollection x)
+    {
+        
+    }
+    //YK End
 
     public void Accept(DString data, TType type, TextKeyCollection x)
     {

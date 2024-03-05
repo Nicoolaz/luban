@@ -81,4 +81,11 @@ class EditorJsonSave : ITypeFuncVisitor<string, string, string, string>
     {
         return $"{{ var __cjson = new JSONArray(); foreach(var _e in {value}) {{ var __entry = new JSONArray(); __cjson[null] = __entry; {type.KeyType.Apply(this, "__entry", "null", "_e.Key")} {type.ValueType.Apply(this, "__entry", "null", "_e.Value")} }} {jsonName}[\"{jsonFieldName}\"] = __cjson; }}";
     }
+
+    //YK Begin
+    public string Accept(TUint type, string jsonName, string jsonFieldName, string value)
+    {
+        return $"{jsonName}[\"{jsonFieldName}\"] = new JSONNumber({value}{(type.IsNullable ? ".Value" : "")});";
+    }
+    //YK End
 }

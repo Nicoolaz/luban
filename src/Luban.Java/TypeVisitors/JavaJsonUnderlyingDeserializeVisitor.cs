@@ -106,4 +106,11 @@ public class JavaJsonUnderlyingDeserializeVisitor : ITypeFuncVisitor<string, str
         string __v = $"_v{depth}";
         return @$"{{ com.google.gson.JsonArray _json{depth}_ = {json}.getAsJsonArray(); {x} = new {type.Apply(JavaDeclaringTypeNameVisitor.Ins)}(_json{depth}_.size()); for(JsonElement {__e} : _json{depth}_) {{ {type.KeyType.Apply(JavaDeclaringTypeNameVisitor.Ins)} {__k};  {type.KeyType.Apply(this, $"{__e}.getAsJsonArray().get(0)", __k, depth + 1)} {type.ValueType.Apply(JavaDeclaringTypeNameVisitor.Ins)} {__v};  {type.ValueType.Apply(this, $"{__e}.getAsJsonArray().get(1)", __v, depth + 1)}  {x}.put({__k}, {__v}); }}   }}";
     }
+
+    //YK Begin
+    public string Accept(TUint type, string x, string y, int z)
+    {
+        throw new System.NotSupportedException();
+    }
+    //YK End
 }

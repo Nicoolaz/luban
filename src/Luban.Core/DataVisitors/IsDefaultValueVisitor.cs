@@ -81,4 +81,11 @@ public class IsDefaultValueVisitor : IDataFuncVisitor<bool>
     {
         return false;
     }
+
+    //YK Begin
+    public bool Accept(DUint type)
+    {
+        return type.Value == 0;
+    }
+    //YK End
 }

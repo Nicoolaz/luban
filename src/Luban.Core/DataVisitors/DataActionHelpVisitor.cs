@@ -122,6 +122,13 @@ public class DataActionHelpVisitor<T> : IDataActionVisitor<T>
             e.Value.Apply(this, x);
         }
     }
+
+    //YK Begin
+    public void Accept(DUint type, T x)
+    {
+        _underlyingVisitor.Accept(type, x);
+    }
+    //YK End
 }
 
 public class DataActionHelpVisitor<T1, T2> : IDataActionVisitor<T1, T2>
@@ -238,4 +245,11 @@ public class DataActionHelpVisitor<T1, T2> : IDataActionVisitor<T1, T2>
             e.Value.Apply(this, x, y);
         }
     }
+    
+    //YK Begin
+    public void Accept(DUint type, T1 x, T2 y)
+    {
+        _underlyingVisitor.Accept(type, x, y);
+    }
+    //YK End
 }

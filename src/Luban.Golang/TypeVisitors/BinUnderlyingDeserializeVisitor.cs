@@ -87,4 +87,11 @@ public class BinUnderlyingDeserializeVisitor : ITypeFuncVisitor<string, string, 
     {
         return $@"{{ {fieldName} = make({type.Apply(DeclaringTypeNameVisitor.Ins)}); var _n_ int; if _n_, {err} = {bufName}.ReadSize(); {err} != nil {{ {err} = errors.New(""error""); return}}; for i := 0 ; i < _n_ ; i++ {{ var _key_ {type.KeyType.Apply(DeclaringTypeNameVisitor.Ins)}; {type.KeyType.Apply(DeserializeBinVisitor.Ins, "_key_", bufName, err)}; var _value_ {type.ValueType.Apply(DeclaringTypeNameVisitor.Ins)}; {type.ValueType.Apply(DeserializeBinVisitor.Ins, "_value_", bufName, err)}; {fieldName}[_key_] = _value_}} }}";
     }
+
+    //YK Begin
+    public string Accept(TUint type, string fieldName, string bufName, string err)
+    {
+        return $"{{ if {fieldName}, {err} = {bufName}.ReadUint(); {err} != nil {{ {err} = errors.New(\"error\"); return }} }}";
+    }
+    //YK End
 }

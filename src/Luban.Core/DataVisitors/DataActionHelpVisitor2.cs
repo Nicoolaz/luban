@@ -62,6 +62,13 @@ public class DataActionHelpVisitor2<T> : IDataActionVisitor2<T>
     {
         _underlyingVisitor.Accept(data, type, x);
     }
+    
+    //YK Begin
+    public void Accept(DUint data, TType type, T x)
+    {
+        _underlyingVisitor.Accept(data, type, x);
+    }
+    //YK End
 
     public void Accept(DDateTime data, TType type, T x)
     {
@@ -192,6 +199,13 @@ public class DataActionHelpVisitor2<T1, T2> : IDataActionVisitor2<T1, T2>
         _underlyingVisitor.Accept(data, type, x, y);
     }
 
+    //YK Begin
+    public void Accept(DUint data, TType type, T1 x, T2 y)
+    {
+        _underlyingVisitor.Accept(data, type, x, y);
+    }
+    //YK End
+    
     public void Accept(DBean data, TType type, T1 x, T2 y)
     {
         _underlyingVisitor.Accept(data, type, x, y);

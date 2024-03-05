@@ -106,4 +106,11 @@ public class BinaryUnderlyingDeserializeVisitorTabtoy : ITypeFuncVisitor<string,
         string i = $"i{depth}";
         return $"{{int {n} = System.Math.Min({bufName}.ReadSize(), {bufName}.Size);{fieldName} = new {type.Apply(DeclaringTypeNameVisitor.Ins)}({n} * 3 / 2);for(var {i} = 0 ; {i} < {n} ; {i}++) {{ {type.KeyType.Apply(DeclaringTypeNameVisitor.Ins)} {k};  {type.KeyType.Apply(this, bufName, k, depth + 1)} {type.ValueType.Apply(DeclaringTypeNameVisitor.Ins)} {v};  {type.ValueType.Apply(this, bufName, v, depth + 1)}     {fieldName}.Add({k}, {v});}}}}";
     }
+
+    //YK Begin
+    public string Accept(TUint type, string bufName, string fieldName, int depth)
+    {
+        return $"{fieldName} = {bufName}.ReadUint();";
+    }
+    //YK End
 }

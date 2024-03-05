@@ -44,6 +44,13 @@ public class CppUnderlyingDeclaringTypeNameVisitor : ITypeFuncVisitor<string>
         return "::luban::float64";
     }
 
+    //YK Begin
+    public string Accept(TUint type)
+    {
+        return "::luban::uint32";
+    }
+    //YK End
+
     public string Accept(TEnum type)
     {
         return CppTemplateExtension.MakeTypeCppName(type.DefEnum);

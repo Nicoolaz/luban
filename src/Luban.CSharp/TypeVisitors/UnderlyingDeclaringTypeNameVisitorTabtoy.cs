@@ -1,3 +1,4 @@
+//YK Add File
 using Luban.Types;
 using Luban.TypeVisitors;
 using Luban.Utils;
@@ -81,5 +82,10 @@ public class UnderlyingDeclaringTypeNameVisitorTabtoy : ITypeFuncVisitor<string>
     public virtual string Accept(TDateTime type)
     {
         return "long";
+    }
+    
+    public string Accept(TUint type)
+    {
+        return "uint";
     }
 }

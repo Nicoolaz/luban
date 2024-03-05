@@ -80,4 +80,11 @@ public class RawDefineTypeNameVisitor : ITypeFuncVisitor<string>
     {
         return $"map,{type.KeyType.Apply(this)},{type.ValueType.Apply(this)}";
     }
+
+    //YK Begin
+    public string Accept(TUint type)
+    {
+        return "uint";
+    }
+    //YK End
 }

@@ -1,3 +1,4 @@
+//YK Add File
 using Luban.Types;
 using Luban.TypeVisitors;
 using Luban.Utils;
@@ -78,6 +79,11 @@ public class UnderlyingDeclaringKeyTypeNameVisitorTabtoy : ITypeFuncVisitor<stri
     public string Accept(TMap type)
     {
         return $"{ConstStrings.HashMapTypeName}<{type.KeyType.Apply(this)}, {type.ValueType.Apply(this)}>";
+    }
+
+    public string Accept(TUint type)
+    {
+        return "uint";
     }
 
     public virtual string Accept(TDateTime type)

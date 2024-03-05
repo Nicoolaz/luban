@@ -77,6 +77,13 @@ public class LuaCommentTypeVisitor : ITypeFuncVisitor<string>
         return $"table<{type.KeyType.Apply(this)},{type.ValueType.Apply(this)}>";
     }
 
+    //YK Begin
+    public string Accept(TUint type)
+    {
+        return "integer";
+    }
+    //YK End
+
     public string Accept(TDateTime type)
     {
         return "integer";

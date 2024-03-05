@@ -42,6 +42,13 @@ public class CppUnderlyingDeserializeVisitor : ITypeFuncVisitor<string, string, 
     {
         return $"if(!{bufName}.readDouble({fieldName})) return false;";
     }
+    
+    //YK Begin
+    public string Accept(TUint type, string bufName, string fieldName)
+    {
+        return $"if(!{bufName}.readUint({fieldName})) return false;";
+    }
+    //YK End
 
     public string Accept(TEnum type, string bufName, string fieldName)
     {

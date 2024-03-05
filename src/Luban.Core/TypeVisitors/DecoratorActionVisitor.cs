@@ -51,6 +51,13 @@ public abstract class DecoratorActionVisitor<T> : ITypeActionVisitor<T>
         DoAccept(type, x);
     }
 
+    //YK Begin
+    public virtual void Accept(TUint type, T x)
+    {
+        DoAccept(type, x);
+    }
+    //YK End
+
     public virtual void Accept(TDateTime type, T x)
     {
         DoAccept(type, x);
@@ -127,6 +134,13 @@ public abstract class DecoratorActionVisitor<T1, T2> : ITypeActionVisitor<T1, T2
     {
         DoAccept(type, x, y);
     }
+    
+    //YK Begin
+    public virtual void Accept(TUint type, T1 x, T2 y)
+    {
+        DoAccept(type, x, y);
+    }
+    //YK End
 
     public virtual void Accept(TString type, T1 x, T2 y)
     {

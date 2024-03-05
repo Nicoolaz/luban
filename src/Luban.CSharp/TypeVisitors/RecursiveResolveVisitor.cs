@@ -81,4 +81,11 @@ public class RecursiveResolveVisitor : ITypeFuncVisitor<string, string, string>
     {
         return $@"foreach(var _e in {fieldName}.Values) {{ _e?.Resolve({tablesName}); }}";
     }
+
+    //YK Begin
+    public string Accept(TUint type, string fieldName, string tablesName)
+    {
+        throw new NotImplementedException();
+    }
+    //YK End
 }

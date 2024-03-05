@@ -83,4 +83,11 @@ public class JavaDeclaringTypeNameVisitor : ITypeFuncVisitor<string>
     {
         return $"java.util.HashMap<{type.KeyType.Apply(JavaDeclaringBoxTypeNameVisitor.Ins)}, {type.ValueType.Apply(JavaDeclaringBoxTypeNameVisitor.Ins)}>";
     }
+
+    //YK Begin
+    public string Accept(TUint type)
+    {
+        throw new System.NotSupportedException();
+    }
+    //YK End
 }

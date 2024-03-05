@@ -45,6 +45,13 @@ public abstract class DecoratorFuncVisitor<TR> : ITypeFuncVisitor<TR>
     {
         return DoAccept(type);
     }
+    
+    //YK Begin
+    public virtual TR Accept(TUint type)
+    {
+        return DoAccept(type);
+    }
+    //YK End
 
     public virtual TR Accept(TString type)
     {
@@ -125,6 +132,13 @@ public abstract class DecoratorFuncVisitor<T1, TR> : ITypeFuncVisitor<T1, TR>
     {
         return DoAccept(type, x);
     }
+    
+    //YK Begin
+    public virtual TR Accept(TUint type, T1 x)
+    {
+        return DoAccept(type, x);
+    }
+    //YK End
 
     public virtual TR Accept(TString type, T1 x)
     {
@@ -206,6 +220,13 @@ public abstract class DecoratorFuncVisitor<T1, T2, TR> : ITypeFuncVisitor<T1, T2
         return DoAccept(type, x, y);
     }
 
+    //YK Begin
+    public virtual TR Accept(TUint type, T1 x, T2 y)
+    {
+        return DoAccept(type, x, y);
+    }
+    //YK End
+    
     public virtual TR Accept(TString type, T1 x, T2 y)
     {
         return DoAccept(type, x, y);
@@ -286,6 +307,13 @@ public abstract class DecoratorFuncVisitor<T1, T2, T3, TR> : ITypeFuncVisitor<T1
     {
         return DoAccept(type, x, y, z);
     }
+    
+    //YK Begin
+    public virtual TR Accept(TUint type, T1 x, T2 y, T3 z)
+    {
+        return DoAccept(type, x, y, z);
+    }
+    //YK End
 
     public virtual TR Accept(TString type, T1 x, T2 y, T3 z)
     {

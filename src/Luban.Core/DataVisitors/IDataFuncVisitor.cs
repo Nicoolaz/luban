@@ -33,6 +33,10 @@ public interface IDataFuncVisitor<TR>
     TR Accept(DSet type);
 
     TR Accept(DMap type);
+    
+    //YK Begin
+    TR Accept(DUint type);
+    //YK End
 }
 
 public interface IDataFuncVisitor<T, TR>
@@ -66,6 +70,10 @@ public interface IDataFuncVisitor<T, TR>
     TR Accept(DSet type, T x);
 
     TR Accept(DMap type, T x);
+    
+    //YK Begin
+    TR Accept(DUint type, T x);
+    //YK End
 }
 
 public interface IDataFuncVisitor<T1, T2, TR>
@@ -98,4 +106,8 @@ public interface IDataFuncVisitor<T1, T2, TR>
     TR Accept(DSet type, T1 x, T2 y);
 
     TR Accept(DMap type, T1 x, T2 y);
+    
+    //YK Begin
+    TR Accept(DUint type, T1 x, T2 y);
+    //YK End
 }

@@ -170,7 +170,7 @@ class ExcelStreamDataCreator : ITypeFuncVisitor<ExcelStream, DType>
     public DType Accept(TString type, ExcelStream x)
     {
         //YK Begin
-        var d = x.Read(type.IsNullable);
+        var d = x.Read(true);
         //YK End
         var s = ParseString(d);
         if (s == null)
@@ -358,7 +358,31 @@ class ExcelStreamDataCreator : ITypeFuncVisitor<ExcelStream, DType>
         return new DMap(type, datas);
     }
 
-    // YK Add
+    //YK Begin
+    public DType Accept(TUint type, ExcelStream x)
+    {
+        //YK Begin
+        var d = x.Read(type.IsNullable);
+        //YK End
+        if (CheckNull(type.IsNullable, d))
+        {
+            return null;
+        }
+        var ds = d.ToString();
+        //if (field?.Remapper is TEnum te)
+        //{
+        //    if (te.DefineEnum.TryValueByNameOrAlias(ds, out var c))
+        //    {
+        //        return DInt.ValueOf(c);
+        //    }
+        //}
+        if (!uint.TryParse(ds, out var v))
+        {
+            throw new InvalidExcelDataException($"{d} 不是 uint 类型值");
+        }
+        return DUint.ValueOf(v);
+    }
+    
     private List<DType> CreateBeanFields(DefBean bean, DictReader dict)
     {
         var list = new List<DType>();

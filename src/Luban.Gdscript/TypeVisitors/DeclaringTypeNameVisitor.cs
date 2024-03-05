@@ -83,4 +83,11 @@ public class DeclaringTypeNameVisitor : ITypeFuncVisitor<string>
     {
         return "Dictionary";
     }
+
+    //YK Begin
+    public string Accept(TUint type)
+    {
+        throw new System.NotSupportedException();
+    }
+    //YK End
 }

@@ -86,6 +86,13 @@ public class UnderlyingDeserializeVisitor : ITypeFuncVisitor<string, string, str
         return $"{fieldName} = {{}}\nfor _e in {jsonVarName}: var _k: {type.KeyType.Apply(DeclaringTypeNameVisitor.Ins)}; {type.KeyType.Apply(this, "_e[0]", "_k")}; var _v: {type.ValueType.Apply(DeclaringTypeNameVisitor.Ins)}; {type.ValueType.Apply(this, "_e[1]", "_v")}; {fieldName}[_k] = _v";
     }
 
+    //YK Begin
+    public string Accept(TUint type, string x, string y)
+    {
+        throw new System.NotSupportedException();
+    }
+    //YK End
+
     public string Accept(TDateTime type, string jsonVarName, string fieldName)
     {
         return $"{fieldName} = {jsonVarName}";

@@ -129,4 +129,11 @@ class DeserializeJsonUnderingVisitor : ITypeFuncVisitor<string, string, string, 
                 }}
                 }}";
     }
+
+    //YK Begin
+    public string Accept(TUint type, string varName, string fieldName, string bufName)
+    {
+        return DeserializeNumber(type, varName, fieldName, bufName);
+    }
+    //YK End
 }

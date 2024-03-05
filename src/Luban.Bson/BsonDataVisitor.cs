@@ -51,6 +51,13 @@ public class BsonDataVisitor : IDataActionVisitor<BsonDataWriter>
         x.WriteValue(type.Value);
     }
 
+    //YK Begin
+    public virtual void Accept(DUint type, BsonDataWriter x)
+    {
+        x.WriteValue(type.Value);
+    }
+    //YK End
+
     public void Accept(DString type, BsonDataWriter x)
     {
         x.WriteValue(type.Value);

@@ -101,4 +101,11 @@ class RefTypeVisitor : ITypeActionVisitor<Dictionary<string, DefTypeBase>>
         type.KeyType.Apply(this, x);
         type.ValueType.Apply(this, x);
     }
+
+    //YK Begin
+    public void Accept(TUint type, Dictionary<string, DefTypeBase> x)
+    {
+      
+    }
+    //YK End
 }

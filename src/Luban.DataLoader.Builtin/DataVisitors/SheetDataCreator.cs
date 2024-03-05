@@ -516,6 +516,24 @@ class SheetDataCreator : ITypeFuncVisitor<RowColumnSheet, TitleRow, DType>
         throw new Exception();
     }
 
+    //YK Begin
+    public DType Accept(TUint type, RowColumnSheet sheet, TitleRow row)
+    {
+        object x = row.Current;
+        if (CheckNull(type.IsNullable, x))
+        {
+            return null;
+        }
+        if (CheckDefault(x))
+        {
+            ThrowIfNonEmpty(row);
+            return DUint.Default;
+        }
+        return DUint.ValueOf(uint.Parse(x.ToString()));
+    }
+    //YK End
+    
+
     private List<DType> CreateBeanFields(DefBean bean, ExcelStream stream)
     {
         var list = new List<DType>();

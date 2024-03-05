@@ -83,4 +83,11 @@ public class ProtobufWireTypeVisitor : ITypeFuncVisitor<WireFormat.WireType>
     {
         return WireFormat.WireType.LengthDelimited;
     }
+
+    //YK Begin
+    public WireFormat.WireType Accept(TUint type)
+    {
+        return WireFormat.WireType.Varint;
+    }
+    //YK End
 }

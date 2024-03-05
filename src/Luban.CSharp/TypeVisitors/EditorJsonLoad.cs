@@ -77,6 +77,13 @@ class EditorJsonLoad : ITypeFuncVisitor<string, string, string>
         return @$"if(!{json}.IsArray) {{ throw new SerializationException(); }} {x} = new {type.Apply(EditorDeclaringTypeNameVisitor.Ins)}(); foreach(JSONNode __e in {json}.Children) {{ {type.KeyType.Apply(EditorDeclaringTypeNameVisitor.Ins)} __k;  {type.KeyType.Apply(this, "__e[0]", "__k")} {type.ValueType.Apply(EditorDeclaringTypeNameVisitor.Ins)} __v;  {type.ValueType.Apply(this, "__e[1]", "__v")}  {x}.Add(__k, __v); }}  ";
     }
 
+    //YK Begin
+    public string Accept(TUint type, string json, string x)
+    {
+        return $"if(!{json}.IsNumber) {{ throw new SerializationException(); }}  {x} = {json};";
+    }
+    //YK End
+    
     public string Accept(TDateTime type, string json, string x)
     {
         return $"if(!{json}.IsString) {{ throw new SerializationException(); }}  {x} = {json};";
