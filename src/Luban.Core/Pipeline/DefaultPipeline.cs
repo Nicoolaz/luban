@@ -78,7 +78,7 @@ public class DefaultPipeline : IPipeline
     {
         s_logger.Info("validation begin");
         var v = new DataValidatorContext(_defAssembly);
-        v.ValidateTables(_genCtx.ExportTables);
+        v.ValidateTables(_genCtx.Tables);
         s_logger.Info("validation end");
     }
 
