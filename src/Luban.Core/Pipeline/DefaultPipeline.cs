@@ -114,7 +114,6 @@ public class DefaultPipeline : IPipeline
         
         if (_args.GenerateDefTables)
         {
-            //todo Generate Defined Tables
             tasks.Add(Task.Run(()=> ProcessDefTableTarget(_args.DeftableFileName, _defAssembly.TablesByFullName)));
         }
         

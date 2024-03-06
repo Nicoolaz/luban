@@ -40,8 +40,7 @@ public class DataLoaderManager
             foreach (var atomFile in FileUtil.GetFileOrDirectory(Path.Combine(inputDataDir, actualFile)))
             {
                 s_logger.Trace("load table:{} atomfile:{}", table.FullName, atomFile);
-                //tasks.Add(Task.Run(() => LoadTableFile(table, atomFile, subAssetName, options)));
-                records.AddRange(LoadTableFile(table, atomFile, subAssetName, options));
+                tasks.Add(Task.Run(() => LoadTableFile(table, atomFile, subAssetName, options)));
             }
         }
 
