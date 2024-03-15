@@ -49,6 +49,7 @@
     <ItemGroup>
       <Folder Include="Templates\common\" />
       <Folder Include="Templates\cs-editor-json\" />
+      <Folder Include="Templates\cs-sqlite3\" />
     </ItemGroup>
 
     <ItemGroup>
@@ -88,6 +89,15 @@
       <None Update="Templates\cs-editor-json\enum.sbn">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
+        <None Update="Templates\cs-sqlite3\bean.sbn">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Update="Templates\cs-sqlite3\table.sbn">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Update="Templates\cs-sqlite3\tables.sbn">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
 
 </Project>

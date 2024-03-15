@@ -72,7 +72,7 @@ public class BeanSchemaFromExcelHeaderLoader : IBeanSchemaLoader
                     }
                     case "group":
                     {
-                        cf.Groups = attrValue.Split(',').Select(s => s.Trim()).Where(s => !string.IsNullOrWhiteSpace(s)).ToList();
+                        cf.Groups = SchemaLoaderUtil.CreateGroups(attrValue, GenerationContext.GlobalConf.GroupsIsChar);
                         break;
                     }
                     case "comment":
@@ -94,7 +94,7 @@ public class BeanSchemaFromExcelHeaderLoader : IBeanSchemaLoader
 
             if (!string.IsNullOrEmpty(f.Groups))
             {
-                cf.Groups = f.Groups.Split(',').Select(s => s.Trim()).Where(s => !string.IsNullOrWhiteSpace(s)).ToList();
+                cf.Groups = SchemaLoaderUtil.CreateGroups(f.Groups, GenerationContext.GlobalConf.GroupsIsChar);
             }
 
             cb.Fields.Add(cf);

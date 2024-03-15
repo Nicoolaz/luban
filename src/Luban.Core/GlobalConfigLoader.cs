@@ -52,6 +52,10 @@ public class GlobalConfigLoader : IConfigLoader
         public string DataDir { get; set; }
 
         public List<Target> Targets { get; set; }
+
+        public List<string> ExcelDefaultSchema { get; set; }
+
+        public bool GroupsIsChar;
     }
 
     public LubanConfig Load(string fileName)
@@ -94,6 +98,8 @@ public class GlobalConfigLoader : IConfigLoader
             Groups = groups,
             Targets = targets,
             Imports = importFiles,
+            GroupsIsChar = globalConf.GroupsIsChar,
+            ExcelDefaultSchema = globalConf.ExcelDefaultSchema,
         };
     }
 

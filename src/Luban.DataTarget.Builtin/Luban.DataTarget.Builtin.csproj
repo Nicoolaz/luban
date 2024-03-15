@@ -36,4 +36,8 @@
       <ProjectReference Include="..\Luban.DataLoader.Builtin\Luban.DataLoader.Builtin.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="Microsoft.Data.Sqlite" Version="8.0.2" />
+    </ItemGroup>
+
 </Project>

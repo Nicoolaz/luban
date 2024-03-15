@@ -184,7 +184,7 @@ public class ExcelSchemaLoader : SchemaLoaderBase
                 Tags = DefUtil.ParseAttrs((data.GetField("tags") as DString).Value),
                 Comment = (data.GetField("comment") as DString).Value,
                 IsUniqueItemId = (data.GetField("unique") as DBool).Value,
-                Groups = SchemaLoaderUtil.CreateGroups((data.GetField("group") as DString).Value.Trim()),
+                Groups = SchemaLoaderUtil.CreateGroups((data.GetField("group") as DString).Value.Trim(), GenerationContext.GlobalConf.GroupsIsChar),
                 Items = items.Datas.Cast<DBean>().Select(d => new EnumItem()
                 {
                     Name = (d.GetField("name") as DString).Value,
@@ -299,7 +299,7 @@ public class ExcelSchemaLoader : SchemaLoaderBase
                 Alias = alias,
                 Comment = comment,
                 Tags = DefUtil.ParseAttrs(tags),
-                Groups = SchemaLoaderUtil.CreateGroups(group),
+                Groups = SchemaLoaderUtil.CreateGroups(group, GenerationContext.GlobalConf.GroupsIsChar),
                 Parent = parent,
                 //YK Begin
                 UseDictReader = ((DBool)data.GetField("useDictReader")).Value,

@@ -53,7 +53,10 @@ public class DefBean : DefTypeBase
     //YK Begin
     public bool UseDictReader { get; }
 
-    public override string TypeName => Name + (HasTag("IsTableBean") ? "Define" : "");
+    public override string TypeName => Name + (ConnectedTable != null ? "Define" : "");
+
+    public bool IsTableBean => ConnectedTable != null;
+    public DefTable ConnectedTable { get; set; }
     //YK End
 
 

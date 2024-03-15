@@ -85,7 +85,7 @@ public class XmlSchemaLoader : SchemaLoaderBase
             IsFlags = XmlUtil.GetOptionBoolAttribute(e, "flags"),
             Tags = DefUtil.ParseAttrs(XmlUtil.GetOptionalAttribute(e, "tags")),
             IsUniqueItemId = XmlUtil.GetOptionBoolAttribute(e, "unique", true),
-            Groups = SchemaLoaderUtil.CreateGroups(XmlUtil.GetOptionalAttribute(e, "group")),
+            Groups = SchemaLoaderUtil.CreateGroups(XmlUtil.GetOptionalAttribute(e, "group"), GenerationContext.GlobalConf.GroupsIsChar),
             Items = new(),
             TypeMappers = new(),
         };
@@ -223,7 +223,7 @@ public class XmlSchemaLoader : SchemaLoaderBase
             Sep = XmlUtil.GetOptionalAttribute(e, "sep"),
             Comment = XmlUtil.GetOptionalAttribute(e, "comment"),
             Tags = DefUtil.ParseAttrs(XmlUtil.GetOptionalAttribute(e, "tags")),
-            Groups = SchemaLoaderUtil.CreateGroups(XmlUtil.GetOptionalAttribute(e, "group")),
+            Groups = SchemaLoaderUtil.CreateGroups(XmlUtil.GetOptionalAttribute(e, "group"), GenerationContext.GlobalConf.GroupsIsChar),
             Fields = new(),
             TypeMappers = new(),
         };

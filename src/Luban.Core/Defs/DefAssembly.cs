@@ -278,6 +278,13 @@ public class DefAssembly
             var (containerType, containerTags) = DefUtil.ParseTypeAndVaildAttrs(containerTypeAndTags);
             return CreateContainerType(module, containerType, containerTags, elementTypeAndTags.Trim());
         }
+        else if (type.StartsWith("[]"))
+        {
+            string containerTypeAndTags = "list#sep=|";
+            var (containerType, containerTags) = DefUtil.ParseTypeAndVaildAttrs(containerTypeAndTags);
+            string elementTypeAndTags = type.Substring(2);
+            return CreateContainerType(module, containerType, containerTags, elementTypeAndTags.Trim());
+        }
         else
         {
             return CreateNotContainerType(module, type, containerElementType);

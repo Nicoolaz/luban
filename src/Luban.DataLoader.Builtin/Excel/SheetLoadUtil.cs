@@ -55,15 +55,48 @@ public static class SheetLoadUtil
         }
     }
 
+    //YK Begin
+    private static bool IsSheetValid(IExcelDataReader reader)
+    {
+        var name = reader.Name.Trim();
+        if (string.IsNullOrEmpty(name) || name.StartsWith("#") || name.StartsWith("@"))
+        {
+            return false;
+        }
+
+        //var first = reader.GetString(0)?.Trim();
+        return reader.FieldCount > 0 && !string.IsNullOrEmpty(reader.GetString(0)?.Trim());
+    }
+    //YK End
+
     private static RawSheet ParseRawSheet(IExcelDataReader reader)
     {
         bool orientRow;
+        //YK Begin
+        bool useDefaultSchema = false;
 
         if (!TryParseMeta(reader, out orientRow, out var tableName))
         {
-            return null;
+            if (GenerationContext.GlobalConf.ExcelDefaultSchema.Count > 0 && IsSheetValid(reader) )
+            {
+                useDefaultSchema = true;
+            }
+            else
+            {
+                return null;
+            }
+            
         }
         var cells = ParseRawSheetContent(reader, orientRow, false);
+        if (useDefaultSchema)
+        {
+            for (int i = 0; i < cells.Count; i++)
+            {
+                var defCell = i < GenerationContext.GlobalConf.ExcelDefaultSchema.Count ? new Cell(i, 0, GenerationContext.GlobalConf.ExcelDefaultSchema[i]) : new Cell(i, 0, "");
+                cells[i].Insert(0, defCell);
+            }
+        }
+        //YK End
         ValidateTitles(cells);
         var title = ParseTitle(cells, reader.MergeCells, orientRow);
         cells.RemoveAll(c => IsNotDataRow(c));
@@ -468,7 +501,7 @@ public static class SheetLoadUtil
         return s == tag;
     }
 
-    private static List<List<Cell>> ParseRawSheetContent(IExcelDataReader reader, bool orientRow, bool headerOnly)
+    private static List<List<Cell>> ParseRawSheetContent(IExcelDataReader reader, bool orientRow, bool headerOnly, int headerCount = 0)
     {
         // TODO 优化性能
         // 几个思路
@@ -485,7 +518,7 @@ public static class SheetLoadUtil
                 row.Add(new Cell(rowIndex, i, reader.GetValue(i)));
             }
             originRows.Add(row);
-            if (orientRow && headerOnly && !IsHeaderRow(row))
+            if (orientRow && headerOnly && !IsHeaderRow(row) && rowIndex >= headerCount)
             {
                 break;
             }
@@ -524,6 +557,7 @@ public static class SheetLoadUtil
         {
             do
             {
+                if(reader.Name.StartsWith("@")) continue;
                 if (sheetName == null || reader.Name == sheetName)
                 {
                     try
@@ -548,12 +582,31 @@ public static class SheetLoadUtil
     private static RawSheetTableDefInfo ParseSheetTableDefInfo(string rawUrl, IExcelDataReader reader)
     {
         bool orientRow;
+//YK Begin, 增加插入默认行定义的功能
+        bool useDefRows = false;
 
-        if (!TryParseMeta(reader, out orientRow, out var _))
+        if (!TryParseMeta(reader, out orientRow, out var _) )
         {
-            return null;
+            
+            if (GenerationContext.GlobalConf.ExcelDefaultSchema.Count > 0 && IsSheetValid(reader))
+                useDefRows = true;
+            else
+                return null;
         }
-        var cells = ParseRawSheetContent(reader, orientRow, true);
+
+        int headerCount = useDefRows ? GenerationContext.GlobalConf.ExcelDefaultSchema.Count : 0;
+        var cells = ParseRawSheetContent(reader, orientRow, true, headerCount);
+        if (useDefRows)
+        {
+            var defCells = (GenerationContext.GlobalConf.ExcelDefaultSchema.Select((s, index) => new Cell(index, 0, s)).ToList());
+            for (int i = 0; i < cells.Count; i++)
+            {
+                var cell = i < defCells.Count ? defCells[i] : new Cell(i, 0, "");
+                cells[i].Insert(0, cell);
+            }
+        }
+//YK End
+        
         var title = ParseTitle(cells, reader.MergeCells, orientRow);
 
         int typeRowIndex = cells.FindIndex(row => IsTypeRow(row));

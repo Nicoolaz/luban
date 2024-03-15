@@ -66,7 +66,7 @@ public class DefTable : DefTypeBase
     public List<ITableValidator> Validators { get; } = new();
 
     public string OutputDataFile => string.IsNullOrWhiteSpace(_outputFile) ? FullName.Replace('.', '_').ToLower() : _outputFile;
-
+    
     public override void Compile()
     {
         var ass = Assembly;
@@ -75,6 +75,8 @@ public class DefTable : DefTypeBase
         {
             throw new Exception($"table:'{FullName}' 的 value类型:'{ValueType}' 不存在");
         }
+
+        ValueTType.DefBean.ConnectedTable = this;
 
         switch (Mode)
         {

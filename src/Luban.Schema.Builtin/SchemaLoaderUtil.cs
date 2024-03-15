@@ -6,9 +6,17 @@ namespace Luban.Schema.Builtin;
 
 public static class SchemaLoaderUtil
 {
-    public static List<string> CreateGroups(string s)
+    public static List<string> CreateGroups(string s, bool isCharArray)
     {
-        return s.Split(',', ';').Select(x => x.Trim()).Where(x => !string.IsNullOrWhiteSpace(x)).ToList();
+        if (isCharArray)
+        {
+            return s.ToCharArray().Where(s=> s != ' ').Select(s => s.ToString()).ToList();
+        }
+        else
+        {
+            return s.Split(',', ';').Select(x => x.Trim()).Where(x => !string.IsNullOrWhiteSpace(x)).ToList();
+        }
+        
     }
 
     public static RawTable CreateTable(string schemaFile, string name, string module, string valueType, string index, string mode, string group,
@@ -21,7 +29,7 @@ public static class SchemaLoaderUtil
             ValueType = valueType,
             ReadSchemaFromFile = readSchemaFromFile,
             Index = index,
-            Groups = CreateGroups(group),
+            Groups = CreateGroups(group, GenerationContext.GlobalConf.GroupsIsChar),
             Comment = comment,
             Mode = ConvertMode(schemaFile, name, mode, index),
             Tags = DefUtil.ParseAttrs(tags),
@@ -116,7 +124,7 @@ public static class SchemaLoaderUtil
         var f = new RawField()
         {
             Name = name,
-            Groups = CreateGroups(group),
+            Groups = CreateGroups(group,GenerationContext.GlobalConf.GroupsIsChar),
             Comment = comment,
             Tags = DefUtil.ParseAttrs(tags),
             NotNameValidation = ignoreNameValidation,

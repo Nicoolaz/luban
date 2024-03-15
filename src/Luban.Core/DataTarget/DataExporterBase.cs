@@ -44,14 +44,18 @@ public abstract class DataExporterBase : IDataExporter
             }
             case AggregationType.Other:
             {
-                ExportCustom(tables, manifest, dataTarget);
+                //YK Begin
+                ExportCustom(tables, manifest, dataTarget, ctx);
+                //YK End
                 break;
             }
         }
     }
 
-    protected virtual void ExportCustom(List<DefTable> tables, OutputFileManifest manifest, IDataTarget dataTarget)
+    //YK Begin
+    protected virtual void ExportCustom(List<DefTable> tables, OutputFileManifest manifest, IDataTarget dataTarget, GenerationContext ctx)
     {
 
     }
+    //YK End
 }

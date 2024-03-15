@@ -11,5 +11,9 @@ public class LubanConfig
 
     public List<SchemaFileInfo> Imports { get; set; }
 
+    public bool GroupsIsChar;
+
+    public List<string> ExcelDefaultSchema;
+
     public string InputDataDir { get; set; }
 }
