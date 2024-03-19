@@ -55,7 +55,7 @@ public class GlobalConfigLoader : IConfigLoader
 
         public List<string> ExcelDefaultSchema { get; set; }
 
-        public bool GroupsIsChar;
+        public bool GroupsIsChar { get; set; }
     }
 
     public LubanConfig Load(string fileName)

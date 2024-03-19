@@ -29,6 +29,7 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>disable</Nullable>
         <RootNamespace>Luban</RootNamespace>
+        <PublishAOT>true</PublishAOT>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">

@@ -29,6 +29,7 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>disable</Nullable>
         <EnableDynamicLoading>true</EnableDynamicLoading>
+        <PublishAOT>true</PublishAOT>
     </PropertyGroup>
 
     <ItemGroup>

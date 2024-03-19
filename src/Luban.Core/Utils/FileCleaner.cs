@@ -7,6 +7,8 @@ public class FileCleaner
     private readonly HashSet<string> _outputDirs = new();
     private readonly HashSet<string> _savedFileOrDirs = new();
     private readonly HashSet<string> _ignoreFileExtensions = new();
+    private string specifiedFilter = "*";
+    private bool cleanSubDirs = true;
 
 
     public void AddIgnoreExtension(string ext)
@@ -56,7 +58,7 @@ public class FileCleaner
         var fullRootPath = Path.GetFullPath(dir);
         s_logger.Trace("full path:{path}", fullRootPath);
 
-        foreach (var file in Directory.GetFiles(dir, "*", SearchOption.AllDirectories))
+        foreach (var file in Directory.GetFiles(dir, specifiedFilter, cleanSubDirs ? SearchOption.AllDirectories: SearchOption.TopDirectoryOnly))
         {
             s_logger.Trace("file:{file}", file);
             string fullSubFilePath = Path.GetFullPath(file);
@@ -73,27 +75,34 @@ public class FileCleaner
         }
 
         // 清除空目录
-        var subDirs = new List<string>(Directory.GetDirectories(dir, "*", SearchOption.AllDirectories));
-        subDirs.Sort((a, b) => -string.Compare(a, b, StringComparison.Ordinal));
-        foreach (var subDir in subDirs)
+        if (cleanSubDirs)
         {
-            string fullSubDirPath = Path.GetFullPath(subDir);
-            var relateDir = fullSubDirPath[(fullRootPath.Length + 1)..].Replace('\\', '/');
-            if (_savedFileOrDirs.Contains(relateDir))
+            var subDirs = new List<string>(Directory.GetDirectories(dir, "*", SearchOption.AllDirectories));
+            subDirs.Sort((a, b) => -string.Compare(a, b, StringComparison.Ordinal));
+            foreach (var subDir in subDirs)
             {
-                s_logger.Trace("remain directory:{dir}", relateDir);
-            }
-            else
-            {
-                s_logger.Info("[remove] dir: {dir}", subDir);
-                FileUtil.DeleteDirectoryRecursive(subDir);
+                string fullSubDirPath = Path.GetFullPath(subDir);
+                var relateDir = fullSubDirPath[(fullRootPath.Length + 1)..].Replace('\\', '/');
+                if (_savedFileOrDirs.Contains(relateDir))
+                {
+                    s_logger.Trace("remain directory:{dir}", relateDir);
+                }
+                else
+                {
+                    s_logger.Info("[remove] dir: {dir}", subDir);
+                    FileUtil.DeleteDirectoryRecursive(subDir);
+                }
             }
         }
     }
 
-    public static void Clean(string outputDir, List<string> savedFiles)
+    public static void Clean(string outputDir, List<string> savedFiles, string specifiedFilter = "*", bool cleanSubDirs = false)
     {
-        var cleaner = new FileCleaner();
+        var cleaner = new FileCleaner()
+        {
+            specifiedFilter = string.IsNullOrEmpty(specifiedFilter) ? "*" : specifiedFilter,
+            cleanSubDirs = cleanSubDirs
+        };
         cleaner.AddOutputDir(outputDir);
         cleaner.AddIgnoreExtension("meta"); // for unity
         foreach (var file in savedFiles)
