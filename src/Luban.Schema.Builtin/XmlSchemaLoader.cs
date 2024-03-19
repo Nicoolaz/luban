@@ -122,7 +122,8 @@ public class XmlSchemaLoader : SchemaLoaderBase
         Collector.Add(en);
     }
 
-    private readonly List<string> _tableOptionalAttrs = new() { "index", "mode", "group", "comment", "readSchemaFromFile", "output", "tags" };
+    //YK Begin 对Index扩展
+    private readonly List<string> _tableOptionalAttrs = new() { "index", "mode", "group", "comment", "readSchemaFromFile", "output", "tags", "index_mode" };
     private readonly List<string> _tableRequireAttrs = new() { "name", "value", "input" };
 
     private void AddTable(XElement e)
@@ -139,8 +140,10 @@ public class XmlSchemaLoader : SchemaLoaderBase
         string mode = XmlUtil.GetOptionalAttribute(e, "mode");
         string tags = XmlUtil.GetOptionalAttribute(e, "tags");
         string output = XmlUtil.GetOptionalAttribute(e, "output");
-        Collector.Add(SchemaLoaderUtil.CreateTable(_fileName, name, module, valueType, index, mode, group, comment, defineFromFile, input, tags, output));
+        string index_mode = XmlUtil.GetOptionalAttribute(e, "index_mode");
+        Collector.Add(SchemaLoaderUtil.CreateTable(_fileName, name, module, valueType, index, index_mode, mode, group, comment, defineFromFile, input, tags, output));
     }
+    //YK End
 
     private static readonly List<string> _fieldOptionalAttrs = new()
     {

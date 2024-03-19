@@ -9,6 +9,10 @@ public class RawTable
     public string Name { get; set; }
 
     public string Index { get; set; }
+    
+    //YK Begin 对Index扩展
+    public string IndexMode { get; set; }
+    //YK End
 
     public string ValueType { get; set; }
 

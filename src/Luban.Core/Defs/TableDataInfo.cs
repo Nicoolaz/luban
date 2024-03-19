@@ -34,6 +34,18 @@ public class TableDataInfo
         }
     }
 
+    private Dictionary<DType, Record> BuildIndexMap(IndexInfo indexInfo, List<Record> records)
+    {
+        var recordMap = new Dictionary<DType, Record>();
+        foreach (Record r in records)
+        {
+            DType key = r.Data.Fields[indexInfo.IndexFieldIdIndex];
+            recordMap[key] = r;
+        }
+
+        return recordMap;
+    }
+
     private void BuildIndexs()
     {
         List<Record> mainRecords = MainRecords;
@@ -123,7 +135,68 @@ public class TableDataInfo
                     throw new Exception($"配置表 '{table.FullName}' 是list表.不支持patch");
                 }
                 var recordMapByIndexs = new Dictionary<string, Dictionary<DType, Record>>();
-                if (table.IsUnionIndex)
+                //YK Begin 对Index做扩展
+                foreach (var indexInfo in table.IndexList)
+                {
+                    switch (indexInfo.Mode)
+                    {
+                        case IndexMode.One:
+                            if (indexInfo.IsUnionIndex)
+                            {
+                                var unionRecordMap = new Dictionary<List<DType>, Record>(ListEqualityComparer<DType>.Default); // comparetor
+                                foreach (Record r in mainRecords)
+                                {
+                                    var unionKeys = indexInfo.Childs.Select(idx => r.Data.Fields[idx.IndexFieldIdIndex]).ToList();
+                                    if (!unionRecordMap.TryAdd(unionKeys, r))
+                                    {
+                                        throw new Exception($@"配置表 '{table.FullName}' 主文件 主键字段:'{table.Index}' 主键值:'{StringUtil.CollectionToString(unionKeys)}' 重复.
+        记录1 来自文件:{r.Source}
+        记录2 来自文件:{unionRecordMap[unionKeys].Source}
+");
+                                    }
+                                }
+                                
+                                // 联合索引的 独立子索引允许有重复key
+                                foreach (var childInfo in indexInfo.Childs)
+                                {
+                                    recordMapByIndexs.TryAdd(childInfo.IndexField.Name, BuildIndexMap(childInfo, mainRecords));
+                                }
+                            }
+                            else
+                            {
+                                var recordMap = new Dictionary<DType, Record>();
+                                foreach (Record r in mainRecords)
+                                {
+                                    DType key = r.Data.Fields[indexInfo.IndexFieldIdIndex];
+                                    if (!recordMap.TryAdd(key, r))
+                                    {
+                                        throw new Exception($@"配置表 '{table.FullName}' 主文件 主键字段:'{indexInfo.IndexField.Name}' 主键值:'{key}' 重复.
+        记录1 来自文件:{r.Source}
+        记录2 来自文件:{recordMap[key].Source}
+");
+                                    }
+                                }
+                                recordMapByIndexs.TryAdd(indexInfo.IndexField.Name, recordMap);
+                            }
+                            break;
+                        case IndexMode.List:
+                            if (indexInfo.IsUnionIndex)
+                            {
+                                foreach (var childInfo in indexInfo.Childs)
+                                {
+                                    recordMapByIndexs.TryAdd(childInfo.IndexField.Name, BuildIndexMap(childInfo, mainRecords)); 
+                                }
+                            }
+                            else
+                            {
+                                recordMapByIndexs.TryAdd(indexInfo.IndexField.Name, BuildIndexMap(indexInfo, mainRecords));
+                            }
+                            break;
+                        default:
+                            throw new Exception("未定义主键模式");
+                    }
+                }
+                /*if (table.IsUnionIndex)
                 {
                     var unionRecordMap = new Dictionary<List<DType>, Record>(ListEqualityComparer<DType>.Default); // comparetor
                     foreach (Record r in mainRecords)
@@ -168,7 +241,7 @@ public class TableDataInfo
                         }
                         recordMapByIndexs.Add(indexInfo.IndexField.Name, recordMap);
                     }
-                }
+                }*/
                 this.FinalRecordMapByIndexs = recordMapByIndexs;
                 FinalRecords = mainRecords;
                 break;

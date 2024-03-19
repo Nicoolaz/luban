@@ -35,6 +35,7 @@ public class ExcelSchemaLoader : SchemaLoaderBase
     }
 
 
+    //YK Begin 对Index扩展
     private void LoadTableListFromFile(string fileName)
     {
         var defTableRecordType = new DefBean(new RawBean()
@@ -50,6 +51,7 @@ public class ExcelSchemaLoader : SchemaLoaderBase
                 new() { Name = "full_name", Type = "string" },
                 new() { Name = "value_type", Type = "string" },
                 new() { Name = "index", Type = "string" },
+                new() { Name = "index_mode", Type = "string" },
                 new() { Name = "mode", Type = "string" },
                 new() { Name = "group", Type = "string" },
                 new() { Name = "comment", Type = "string" },
@@ -85,6 +87,7 @@ public class ExcelSchemaLoader : SchemaLoaderBase
             string module = TypeUtil.GetNamespace(fullName);
             string valueType = (data.GetField("value_type") as DString).Value.Trim();
             string index = (data.GetField("index") as DString).Value.Trim();
+            string index_mode = (data.GetField("index_mode") as DString).Value.Trim();
             string mode = (data.GetField("mode") as DString).Value.Trim();
             string group = (data.GetField("group") as DString).Value.Trim();
             string comment = (data.GetField("comment") as DString).Value.Trim();
@@ -94,10 +97,11 @@ public class ExcelSchemaLoader : SchemaLoaderBase
             string tags = (data.GetField("tags") as DString).Value.Trim();
             string outputFile = (data.GetField("output") as DString).Value.Trim();
             // string options = (data.GetField("options") as DString).Value.Trim(); 
-            var table = SchemaLoaderUtil.CreateTable(fileName, name, module, valueType, index, mode, group, comment, readSchemaFromFile, inputFile, tags, outputFile);
+            var table = SchemaLoaderUtil.CreateTable(fileName, name, module, valueType, index, index_mode, mode, group, comment, readSchemaFromFile, inputFile, tags, outputFile);
             Collector.Add(table);
         };
     }
+    //YK End
 
     private void LoadEnumListFromFile(string fileName)
     {

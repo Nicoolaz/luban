@@ -1,6 +1,8 @@
 using Luban.Defs;
 using Luban.RawDefs;
 using Luban.Utils;
+using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace Luban.Schema.Builtin;
 
@@ -19,7 +21,8 @@ public static class SchemaLoaderUtil
         
     }
 
-    public static RawTable CreateTable(string schemaFile, string name, string module, string valueType, string index, string mode, string group,
+    //YK Begin 对Index扩展
+    public static RawTable CreateTable(string schemaFile, string name, string module, string valueType, string index, string index_mode, string mode, string group,
         string comment, bool readSchemaFromFile, string input, string tags, string outputFileName)
     {
         var p = new RawTable()
@@ -29,6 +32,7 @@ public static class SchemaLoaderUtil
             ValueType = valueType,
             ReadSchemaFromFile = readSchemaFromFile,
             Index = index,
+            IndexMode = index_mode,
             Groups = CreateGroups(group, GenerationContext.GlobalConf.GroupsIsChar),
             Comment = comment,
             Mode = ConvertMode(schemaFile, name, mode, index),
@@ -64,11 +68,14 @@ public static class SchemaLoaderUtil
 
         return p;
     }
+    //YK End
 
     public static TableMode ConvertMode(string schemaFile, string tableName, string modeStr, string indexStr)
     {
         TableMode mode;
-        string[] indexs = indexStr.Split(',', '+');
+        //YK Begin 对Index做拓展
+        string[] indexs = indexStr.Split(',');//indexStr.Split(',', '+');
+        //YK End
         switch (modeStr)
         {
             case "one":
@@ -96,6 +103,7 @@ public static class SchemaLoaderUtil
                 mode = TableMode.LIST;
                 break;
             }
+            
             case "":
             {
                 if (string.IsNullOrWhiteSpace(indexStr) || indexs.Length == 1)
@@ -115,6 +123,8 @@ public static class SchemaLoaderUtil
         }
         return mode;
     }
+
+    
 
     //YK Begin
     public static RawField CreateField(string schemaFile, string name, string type, string group,

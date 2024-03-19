@@ -1,3 +1,4 @@
+using System.ComponentModel.Design;
 using Luban.RawDefs;
 using Luban.Types;
 using Luban.TypeVisitors;
@@ -6,7 +7,37 @@ using Luban.Validator;
 
 namespace Luban.Defs;
 
-public record class IndexInfo(TType Type, DefField IndexField, int IndexFieldIdIndex);
+public enum IndexMode
+{
+    One,
+    List,
+}
+
+public record class IndexInfo
+{
+    public TType Type { get; private set; }
+    public DefField IndexField{ get; private set; }
+    public int IndexFieldIdIndex{ get; private set; }
+    
+    public List<IndexInfo> Childs { get; private set; }
+    public bool IsUnionIndex => Childs.Count > 1;
+    public bool IsListMode => Mode == IndexMode.List;
+    
+    public IndexMode Mode { get; private set; }
+
+    public IndexInfo(TType type, DefField indexField, int index, IndexMode mode, List<IndexInfo> childs = null)
+    {
+        Type = type;
+        IndexField = indexField;
+        IndexFieldIdIndex = index;
+        Mode = mode;
+        this.Childs = new List<IndexInfo>();
+        if (childs != null)
+        {
+            Childs.AddRange(childs);
+        }
+    }
+}
 
 public class DefTable : DefTypeBase
 {
@@ -17,6 +48,7 @@ public class DefTable : DefTypeBase
         Name = b.Name;
         Namespace = b.Namespace;
         Index = b.Index;
+        IndexMode = b.IndexMode;
         ValueType = b.ValueType;
         Mode = b.Mode;
         InputFiles = b.InputFiles;
@@ -28,6 +60,8 @@ public class DefTable : DefTypeBase
     }
 
     public string Index { get; private set; }
+    
+    public string IndexMode { get; private set; }
 
     public string ValueType { get; }
 
@@ -114,30 +148,59 @@ public class DefTable : DefTypeBase
                 }
                 KeyTType = IndexField.CType;
                 Type = TMap.Create(false, null, KeyTType, ValueTType, false);
-                this.IndexList.Add(new IndexInfo(KeyTType, IndexField, IndexFieldIdIndex));
+                this.IndexList.Add(new IndexInfo(KeyTType, IndexField, IndexFieldIdIndex, Defs.IndexMode.One));
                 break;
             }
             case TableMode.LIST:
             {
-                var indexs = Index.Split('+', ',').Where(s => !string.IsNullOrWhiteSpace(s)).Select(s => s.Trim()).ToList();
-                foreach (var idx in indexs)
+                var indexs = Index.Split(',').Where(s => !string.IsNullOrWhiteSpace(s)).Select(s=> s.Trim()).ToList();//Index.Split('+', ',').Where(s => !string.IsNullOrWhiteSpace(s)).Select(s => s.Trim()).ToList();
+                var indexModes = IndexMode.Split(',').Where(s => !string.IsNullOrWhiteSpace(s)).Select(s => s.Trim()).ToList();
+                List<IndexInfo> childs = new List<IndexInfo>();
+                for (int j = 0; j< indexs.Count; j++)
                 {
-                    if (ValueTType.DefBean.TryGetField(idx, out var f, out var i))
+                    var idx = indexs[j];
+                    var fields = idx.Split('+').Where(s => !string.IsNullOrWhiteSpace(s)).Select(s=>s.Trim()).ToList();
+                    var mode = DefUtil.ConvertIndexMode(indexModes.Count > j ? indexModes[j] : "");
+                    if (fields.Count > 1)
                     {
-                        if (IndexField == null)
+                        childs.Clear();
+                        foreach (var field in fields)
                         {
-                            IndexField = f;
-                            IndexFieldIdIndex = i;
+                            if (ValueTType.DefBean.TryGetField(field, out var f, out var i))
+                            {
+                                childs.Add(new IndexInfo(f.CType, f, i, Defs.IndexMode.List));
+                                
+                                //this.IndexList.Add(new IndexInfo(f.CType, f, i, IndexType.One, mode));
+                            }
+                            else
+                            {
+                                throw new Exception($"table:'{FullName}' index:'{idx}' 字段不存在");
+                            }
                         }
-                        this.IndexList.Add(new IndexInfo(f.CType, f, i));
+                        this.IndexList.Add(new IndexInfo(childs[0].Type, childs[0].IndexField, childs[0].IndexFieldIdIndex, mode, childs));
                     }
                     else
                     {
-                        throw new Exception($"table:'{FullName}' index:'{idx}' 字段不存在");
+                        
+                        if (ValueTType.DefBean.TryGetField(idx, out var f, out var i))
+                        {
+                            if (IndexField == null)
+                            {
+                                IndexField = f;
+                                IndexFieldIdIndex = i;
+                            }
+                            this.IndexList.Add(new IndexInfo(f.CType, f, i, mode));
+                        }
+                        else
+                        {
+                            throw new Exception($"table:'{FullName}' index:'{idx}' 字段不存在");
+                        }
                     }
+                    
                 }
                 // 如果不是 union index, 每个key必须唯一，否则 (key1,..,key n)唯一
-                IsUnionIndex = IndexList.Count > 1 && !Index.Contains(',');
+                //IsUnionIndex = IndexList.Count > 1 && !Index.Contains(',');
+                IsUnionIndex = false;
                 MultiKey = IndexList.Count > 1 && Index.Contains(',');
                 break;
             }

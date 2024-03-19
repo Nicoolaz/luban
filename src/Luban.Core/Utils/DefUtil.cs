@@ -1,4 +1,6 @@
-﻿namespace Luban.Utils;
+﻿using Luban.Defs;
+
+namespace Luban.Utils;
 
 public static class DefUtil
 {
@@ -288,6 +290,22 @@ public static class DefUtil
         {
             return tags1;
         }
+    }
+    
+    public static IndexMode ConvertIndexMode(string modeStr)
+    {
+        switch (modeStr)
+        {
+            case "one":
+            case "single":
+                return IndexMode.One;
+            case "list":
+            case "multi":
+                return IndexMode.List;
+            default:
+                return IndexMode.One;
+        }
+        
     }
 
     // public static string EscapeCommentByCurrentLanguage(string comment)
