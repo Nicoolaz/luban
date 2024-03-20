@@ -140,6 +140,7 @@ public class TableDataInfo
                 {
                     switch (indexInfo.Mode)
                     {
+                        case IndexMode.OneMainKey:
                         case IndexMode.One:
                             if (indexInfo.IsUnionIndex)
                             {
@@ -179,6 +180,7 @@ public class TableDataInfo
                                 recordMapByIndexs.TryAdd(indexInfo.IndexField.Name, recordMap);
                             }
                             break;
+                        case IndexMode.ListMainKey:
                         case IndexMode.List:
                             if (indexInfo.IsUnionIndex)
                             {

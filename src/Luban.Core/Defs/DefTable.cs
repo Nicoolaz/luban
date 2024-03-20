@@ -11,6 +11,8 @@ public enum IndexMode
 {
     One,
     List,
+    OneMainKey,
+    ListMainKey
 }
 
 public record class IndexInfo
@@ -21,7 +23,9 @@ public record class IndexInfo
     
     public List<IndexInfo> Childs { get; private set; }
     public bool IsUnionIndex => Childs.Count > 1;
-    public bool IsListMode => Mode == IndexMode.List;
+    public bool IsListMode => Mode == IndexMode.List || Mode == IndexMode.ListMainKey;
+
+    public bool IsMainKey => !IsUnionIndex && (Mode == IndexMode.ListMainKey || Mode == IndexMode.OneMainKey);
     
     public IndexMode Mode { get; private set; }
 
@@ -156,6 +160,7 @@ public class DefTable : DefTypeBase
                 var indexs = Index.Split(',').Where(s => !string.IsNullOrWhiteSpace(s)).Select(s=> s.Trim()).ToList();//Index.Split('+', ',').Where(s => !string.IsNullOrWhiteSpace(s)).Select(s => s.Trim()).ToList();
                 var indexModes = IndexMode.Split(',').Where(s => !string.IsNullOrWhiteSpace(s)).Select(s => s.Trim()).ToList();
                 List<IndexInfo> childs = new List<IndexInfo>();
+                Dictionary<string, string> mainTypes = new Dictionary<string, string>();
                 for (int j = 0; j< indexs.Count; j++)
                 {
                     var idx = indexs[j];
@@ -168,6 +173,10 @@ public class DefTable : DefTypeBase
                         {
                             if (ValueTType.DefBean.TryGetField(field, out var f, out var i))
                             {
+                                if (f.CType.IsBean)
+                                {
+                                    throw new Exception($"table:'{FullName}' index:'{idx}' 联合主键内不支持嵌套联合主键");
+                                }
                                 childs.Add(new IndexInfo(f.CType, f, i, Defs.IndexMode.List));
                                 
                                 //this.IndexList.Add(new IndexInfo(f.CType, f, i, IndexType.One, mode));
@@ -176,6 +185,11 @@ public class DefTable : DefTypeBase
                             {
                                 throw new Exception($"table:'{FullName}' index:'{idx}' 字段不存在");
                             }
+                        }
+
+                        if (mode == Defs.IndexMode.ListMainKey || mode == Defs.IndexMode.OneMainKey)
+                        {
+                            throw new Exception($"table:'{FullName}' index: '{idx}' 联合索引不能作为MainKey");
                         }
                         this.IndexList.Add(new IndexInfo(childs[0].Type, childs[0].IndexField, childs[0].IndexFieldIdIndex, mode, childs));
                     }
@@ -189,7 +203,16 @@ public class DefTable : DefTypeBase
                                 IndexField = f;
                                 IndexFieldIdIndex = i;
                             }
-                            this.IndexList.Add(new IndexInfo(f.CType, f, i, mode));
+
+                            var info = new IndexInfo(f.CType, f, i, mode);
+                            this.IndexList.Add(info);
+                            if (info.IsMainKey)
+                            {
+                                if (f.CType.IsBean)
+                                    throw new Exception($"table:'{FullName}' index: '{idx}'联合主键不能做为MainKey");
+                                if (!mainTypes.TryAdd(f.CType.Apply(TypeNameVisitor.Ins), idx))
+                                    throw new Exception($"table:'{FullName}' index: '{idx}' MainKey类型与‘{mainTypes[f.CType.Apply(TypeNameVisitor.Ins)]}’重复");
+                            }
                         }
                         else
                         {

@@ -302,6 +302,10 @@ public static class DefUtil
             case "list":
             case "multi":
                 return IndexMode.List;
+            case "one_main_key":
+                return IndexMode.OneMainKey;
+            case "list_main_key":
+                return IndexMode.ListMainKey;
             default:
                 return IndexMode.One;
         }
