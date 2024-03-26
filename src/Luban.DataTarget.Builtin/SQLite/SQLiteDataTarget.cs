@@ -68,33 +68,33 @@ public class SQLiteDataTarget : DataTargetBase
                             if (!defFields[j].NeedExport()) continue;
                             if (defFields[j].IsNullable && record.Data.Fields[j] == null)
                             {
-                                insertCommand.Parameters[index++].Value = 
-                                switch (defFields[j].CType.Apply(SqliteTTypeVisitor.Ins))
-                                {
-                                    case SqliteType.Blob:
-                                    {
-                                        ByteBuf _buf = new ByteBuf();
-                                        _buf.WriteBool(false);
-                                        insertCommand.Parameters[index++].Value = _buf.Bytes;
-                                        break;
-                                    }
-                                    case SqliteType.Integer:
-                                    {
-                                        insertCommand.Parameters[index++].Value = 0;
-                                        break;
-                                    }
-                                    case SqliteType.Real:
-                                    {
-                                        insertCommand.Parameters[index++].Value = 0;
-                                        break;
-                                    }
-                                    case SqliteType.Text:
-                                    {
-                                        insertCommand.Parameters[index++].Value = "";
-                                        break;
-                                    }
-                                        
-                                }
+                                insertCommand.Parameters[index++].Value = "";
+                                // switch (defFields[j].CType.Apply(SqliteTTypeVisitor.Ins))
+                                // {
+                                //     case SqliteType.Blob:
+                                //     {
+                                //         ByteBuf _buf = new ByteBuf();
+                                //         _buf.WriteBool(false);
+                                //         insertCommand.Parameters[index++].Value = _buf.Bytes;
+                                //         break;
+                                //     }
+                                //     case SqliteType.Integer:
+                                //     {
+                                //         insertCommand.Parameters[index++].Value = 0;
+                                //         break;
+                                //     }
+                                //     case SqliteType.Real:
+                                //     {
+                                //         insertCommand.Parameters[index++].Value = 0;
+                                //         break;
+                                //     }
+                                //     case SqliteType.Text:
+                                //     {
+                                //         insertCommand.Parameters[index++].Value = "";
+                                //         break;
+                                //     }
+                                //         
+                                // }
                             }
                             else
                             {

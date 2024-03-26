@@ -18,8 +18,8 @@ public class SQLiteExporter : DataExporterBase
             List<Task> tasks = new List<Task>();
             foreach (var table in tables)
             {
-                // tasks.Add(Task.Run(() =>
-                // {
+                tasks.Add(Task.Run(() =>
+                {
                     using (var conn = SQLiteUtil.CreateAndConnectToDB(dbFilePath))
                     {
                         try
@@ -41,7 +41,7 @@ public class SQLiteExporter : DataExporterBase
                         
                         
                     }
-                // }));
+                }));
             }
 
             Task.WaitAll(tasks.ToArray());
