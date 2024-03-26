@@ -1,3 +1,4 @@
+using System.Text;
 using Luban.CodeFormat;
 using Luban.Defs;
 using Luban.Types;
@@ -32,15 +33,47 @@ public class TypeTemplateExtension : ScriptObject
     {
         return codeStyle.FormatEnumItemName(name);
     }
+//YK Begin 修改Ref生成规则
 
+    //给模板调用的方法
+    public static DefTable GetRefTableEx(DefField field)
+    {
+        var (cfgTable, indexInfo) = GetRefTable(field);
+
+        return cfgTable;
+    }
+
+    //给模板调用的方法
+    public static IndexInfo GetIndexInfoEx(DefField field)
+    {
+        var (cfgTable, indexInfo) = GetRefTable(field);
+
+        return indexInfo;
+    }
+
+    public static DefTable GetCollectionRefTableEx(DefField field)
+    {
+        var (cfgTable, indexInfo) = GetCollectionRefTable(field);
+
+        return cfgTable;
+    }
+    
+    public static IndexInfo GetCollectionIndexInfoEx(DefField field)
+    {
+        var (cfgTable, indexInfo) = GetCollectionRefTable(field);
+
+        return indexInfo;
+    }
     public static bool CanGenerateRef(DefField field)
     {
         if (field.CType.IsCollection)
         {
             return false;
         }
+        
+        var(cfgTable, indexInfo) = GetRefTable(field);
 
-        return GetRefTable(field) != null;
+        return cfgTable != null && indexInfo != null;
     }
 
     public static bool CanGenerateCollectionRef(DefField field)
@@ -49,10 +82,12 @@ public class TypeTemplateExtension : ScriptObject
         {
             return false;
         }
-        return GetCollectionRefTable(field) != null;
+
+        var (cfgTable, indexInfo) = GetCollectionRefTable(field);
+        return cfgTable != null && indexInfo != null;
     }
 
-    public static DefTable GetCollectionRefTable(DefField field)
+    public static (DefTable, IndexInfo) GetCollectionRefTable(DefField field)
     {
         var refTag = field.CType.GetTag("ref");
         if (refTag == null)
@@ -61,28 +96,67 @@ public class TypeTemplateExtension : ScriptObject
         }
         if (refTag == null)
         {
-            return null;
+            return (null, null);
         }
-        if (GenerationContext.Current.Assembly.GetCfgTable(refTag.Replace("?", "")) is { } cfgTable)
-        {
-            return cfgTable;
-        }
-        return null;
+        return GetRefTable(refTag);
     }
 
-    public static DefTable GetRefTable(DefField field)
+    public static (DefTable, IndexInfo) GetRefTable(string refTag)
     {
-        if (field.CType.GetTag("ref") is { } value && GenerationContext.Current.Assembly.GetCfgTable(value.Replace("?", "")) is { } cfgTable)
+        var (tableName, fieldName, ignoreDefault) = DefUtil.ParseRefString(refTag);
+        if (GenerationContext.Current.Assembly.GetCfgTable(tableName) is { } cfgTable)
         {
-            return cfgTable;
+            switch (cfgTable.Mode)
+            {
+                case(TableMode.MAP):
+                    return (cfgTable, cfgTable.IndexList[0]);
+                case TableMode.ONE:
+                    //单例表不支持ref导出
+                    return (null, null);
+                case TableMode.LIST:
+                {
+                    var indexInfo = cfgTable.IndexList.Find(i => !i.IsUnionIndex && i.IndexField.Name == fieldName);
+                    if (indexInfo != null)
+                    {
+                        return (cfgTable, indexInfo);
+                    }
+                    else
+                    {
+                        return (null, null);
+                    }
+                }
+            }
         }
-        return null;
+        return (null, null);
+    }
+    public static (DefTable, IndexInfo) GetRefTable(DefField field)
+    {
+        var refTag = field.CType.GetTag("ref");
+        if (refTag == null)
+        {
+            return (null, null);
+        }
+
+        return GetRefTable(refTag);
     }
 
     public static TType GetRefType(DefField field)
     {
-        return GetRefTable(field)?.ValueTType;
+        var (cfgTable, indexInfo) = GetRefTable(field);
+        if (indexInfo == null) return null;
+
+        TType result = null;
+        if (indexInfo.IsListMode)
+        {
+            result = TList.Create(false, null, cfgTable.ValueTType, false);
+        }
+        else
+        {
+            result = cfgTable.ValueTType;
+        }
+        return result;
     }
+    //YK End
 
     public static bool IsFieldBeanNeedResolveRef(DefField field)
     {

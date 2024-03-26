@@ -1,13 +1,13 @@
-﻿using Luban.Defs;
+using Luban.Defs;
 using Luban.TemplateExtensions;
 using Luban.Types;
 using Luban.TypeVisitors;
 
 namespace Luban.CSharp.TypeVisitors;
 
-public class DeclaringCollectionRefNameVisitor : ITypeFuncVisitor<string>
+public class DeclaringCollectionRefNameVisitorTabtoy : ITypeFuncVisitor<string>
 {
-    public static DeclaringCollectionRefNameVisitor Ins { get; } = new();
+    public static DeclaringCollectionRefNameVisitorTabtoy Ins { get; } = new();
     public string Accept(TBool type)
     {
         throw new NotImplementedException();
@@ -70,11 +70,13 @@ public class DeclaringCollectionRefNameVisitor : ITypeFuncVisitor<string>
         {
             if (indexInfo.IsListMode)
             {
-                var listType = TList.Create(false, null, refTable.ValueTType, false);
-                return listType.Apply(DeclaringTypeNameVisitor.Ins) + "[]";
+                var listType = TList.Create(false, null, indexInfo.IndexField.CType, false);
+                return listType.Apply(DeclaringTypeNameVisitorTabtoy.Ins) + "[]";
             }
             else
-                return refTable.ValueTType.Apply(DeclaringTypeNameVisitor.Ins) + "[]";
+            {
+                return indexInfo.IndexField.CType.Apply(DeclaringTypeNameVisitorTabtoy.Ins) + "[]";
+            }
         }
         throw new Exception($"解析'{type.ElementType}[]' 的ref失败");
     }
@@ -86,11 +88,14 @@ public class DeclaringCollectionRefNameVisitor : ITypeFuncVisitor<string>
         {
             if (indexInfo.IsListMode)
             {
-                var listType = TList.Create(false, null, refTable.ValueTType, false);
-                return $"{ConstStrings.ListTypeName}<{listType.Apply(DeclaringTypeNameVisitor.Ins)}>";
+                var listType = TList.Create(false, null, indexInfo.IndexField.CType, false);
+                return $"{ConstStrings.ListTypeName}<{listType.Apply(DeclaringTypeNameVisitorTabtoy.Ins)}>";
             }
             else
-                return $"{ConstStrings.ListTypeName}<{refTable.ValueTType.Apply(DeclaringTypeNameVisitor.Ins)}>";
+            {
+                return $"{ConstStrings.ListTypeName}<{indexInfo.IndexField.CType.Apply(DeclaringTypeNameVisitorTabtoy.Ins)}>";
+            }
+            
         }
         throw new Exception($"解析'{ConstStrings.ListTypeName}<{type.ElementType}>' 的ref失败");
     }
@@ -102,11 +107,13 @@ public class DeclaringCollectionRefNameVisitor : ITypeFuncVisitor<string>
         {
             if (indexInfo.IsListMode)
             {
-                var listType = TList.Create(false, null, refTable.ValueTType, false);
-                return $"{ConstStrings.HashSetTypeName}<{listType.Apply(DeclaringTypeNameVisitor.Ins)}>";
+                var listType = TList.Create(false, null, indexInfo.IndexField.CType, false);
+                return $"{ConstStrings.HashSetTypeName}<{listType.Apply(DeclaringTypeNameVisitorTabtoy.Ins)}>";
             }
             else
-                return $"{ConstStrings.HashSetTypeName}<{refTable.ValueTType.Apply(DeclaringTypeNameVisitor.Ins)}>";
+            {
+                return $"{ConstStrings.HashSetTypeName}<{indexInfo.IndexField.CType.Apply(DeclaringTypeNameVisitorTabtoy.Ins)}>";
+            }
         }
         throw new Exception($"解析'{ConstStrings.HashSetTypeName}<{type.ElementType}>' 的ref失败");
     }
@@ -118,11 +125,11 @@ public class DeclaringCollectionRefNameVisitor : ITypeFuncVisitor<string>
         {
             if (indexInfo.IsListMode)
             {
-                var listType = TList.Create(false, null, refTable.ValueTType, false);
-                return $"{ConstStrings.HashMapTypeName}<{type.KeyType.Apply(DeclaringTypeNameVisitor.Ins)}, {listType.Apply(DeclaringTypeNameVisitor.Ins)}>";
+                var listType = TList.Create(false, null, indexInfo.IndexField.CType, false);
+                return $"{ConstStrings.HashMapTypeName}<{type.KeyType.Apply(DeclaringTypeNameVisitorTabtoy.Ins)}, {listType.Apply(DeclaringTypeNameVisitorTabtoy.Ins)}>";
             }
             else
-                return $"{ConstStrings.HashMapTypeName}<{type.KeyType.Apply(DeclaringTypeNameVisitor.Ins)}, {refTable.ValueTType.Apply(DeclaringTypeNameVisitor.Ins)}>";
+                return $"{ConstStrings.HashMapTypeName}<{type.KeyType.Apply(DeclaringTypeNameVisitorTabtoy.Ins)}, {indexInfo.IndexField.CType.Apply(DeclaringTypeNameVisitorTabtoy.Ins)}>";
         }
         throw new Exception($"解析'{ConstStrings.HashMapTypeName}<{type.KeyType}, {type.ValueType}>' 的ref失败");
     }

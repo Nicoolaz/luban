@@ -291,6 +291,32 @@ public static class DefUtil
             return tags1;
         }
     }
+
+    public static (string TableName, string FieldName, bool IgnoreDefault) ParseRefString(string refStr)
+    {
+        bool ignoreDefault = false;
+
+        if (refStr.EndsWith("?"))
+        {
+            refStr = refStr.Substring(0, refStr.Length - 1);
+            ignoreDefault = true;
+        }
+
+        string tableName;
+        string fieldName;
+        int sepIndex = refStr.IndexOf('@');
+        if (sepIndex >= 0)
+        {
+            tableName = refStr.Substring(sepIndex + 1);
+            fieldName = refStr.Substring(0, sepIndex);
+        }
+        else
+        {
+            tableName = refStr;
+            fieldName = "";
+        }
+        return (tableName, fieldName, ignoreDefault);
+    }
     
     public static IndexMode ConvertIndexMode(string modeStr)
     {

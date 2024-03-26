@@ -5,6 +5,7 @@ using System.Text;
 using Luban.Defs;
 using Luban.Types;
 using Luban.Utils;
+using YamlDotNet.Core.Tokens;
 
 namespace Luban.DataExporter.Builtin.SQLite;
 
@@ -12,7 +13,7 @@ public static class SQLiteUtil
 {
     public static bool IsKeyIndex(string keyName, DefTable t)
     {
-        return t.IndexList.Any(t => t.IndexField.Name == keyName);
+        return t.IndexList.Any(t => t.IndexField.Name == keyName && !t.IsUnionIndex && !t.IsListMode);
     }
 
     public static bool IsSqlitePrimaryKey(string keyName, DefTable t)
@@ -20,7 +21,8 @@ public static class SQLiteUtil
         if (t.IndexList == null) return false;
         for (int i = 0; i < t.IndexList.Count; i++)
         {
-            if (!t.IndexList[i].Type.Apply(CanBeSQLiteKeyVisitor.Ins))
+            
+            if (t.IndexList[i].IsUnionIndex || t.IndexList[i].IsListMode || !t.IndexList[i].Type.Apply(CanBeSQLiteKeyVisitor.Ins))
             {
                 continue;
             }

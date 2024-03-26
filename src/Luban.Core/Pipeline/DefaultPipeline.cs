@@ -72,6 +72,10 @@ public class DefaultPipeline : IPipeline
     {
         _genCtx.LoadDatas();
         DoValidate();
+        if (GenerationContext.Current.AnyValidatorFail)
+        {
+            throw new Exception("导表检查失败，具体信息请查看日志！");
+        }
     }
 
     protected void DoValidate()
@@ -84,6 +88,12 @@ public class DefaultPipeline : IPipeline
 
     protected void ProcessTargets()
     {
+        //把数据检查提前
+        if (_args.ForceLoadTableDatas || _args.DataTargets.Count > 0)
+        {
+            LoadDatas();
+        }
+        
         var tasks = new List<Task>();
         tasks.Add(Task.Run(() =>
         {
@@ -95,10 +105,7 @@ public class DefaultPipeline : IPipeline
             }
         }));
 
-        if (_args.ForceLoadTableDatas || _args.DataTargets.Count > 0)
-        {
-            LoadDatas();
-        }
+        
 
         if (_args.DataTargets.Count > 0)
         {

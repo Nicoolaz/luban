@@ -99,7 +99,7 @@ public class GlobalConfigLoader : IConfigLoader
             Targets = targets,
             Imports = importFiles,
             GroupsIsChar = globalConf.GroupsIsChar,
-            ExcelDefaultSchema = globalConf.ExcelDefaultSchema,
+            ExcelDefaultSchema = globalConf.ExcelDefaultSchema ?? new List<string>(),
         };
     }
 

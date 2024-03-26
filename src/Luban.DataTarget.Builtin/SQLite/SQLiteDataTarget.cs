@@ -23,6 +23,10 @@ public class SQLiteDataTarget : DataTargetBase
 
     public void ExportTable(DefTable table, List<Record> records, SqliteConnection connection)
     {
+        if (table.ValueTType.DefBean.IsAbstractType)
+        {
+            throw new Exception("Sqlite Exporter do not support virtual table bean!");
+        }
         if (SQLiteUtil.IsTableExists(connection, table.Name))
         {
             SQLiteUtil.DeleteTable(connection, table.Name);
@@ -52,6 +56,7 @@ public class SQLiteDataTarget : DataTargetBase
                             parameters.Add(new SqliteParameter($"@{defFields[i].Name}", defFields[i].CType.Apply(SqliteTTypeVisitor.Ins)));
                         }
                     }
+                    
                     insertCommand.Parameters.AddRange(parameters.ToArray());
                 
                     for (int i = 0; i < records.Count; i++)
@@ -61,17 +66,55 @@ public class SQLiteDataTarget : DataTargetBase
                         for (int j = 0; j < record.Data.Fields.Count; j++)
                         {
                             if (!defFields[j].NeedExport()) continue;
-                            if (defFields[j].CType.IsBean && SQLiteUtil.IsKeyIndex(defFields[j].Name, table))
+                            if (defFields[j].IsNullable && record.Data.Fields[j] == null)
                             {
-                                foreach (var field in ((DBean)record.Data.Fields[j]).Fields)
+                                insertCommand.Parameters[index++].Value = 
+                                switch (defFields[j].CType.Apply(SqliteTTypeVisitor.Ins))
                                 {
-                                    field.Apply(SQLiteDataVisiter.Ins, insertCommand.Parameters[index++]);
+                                    case SqliteType.Blob:
+                                    {
+                                        ByteBuf _buf = new ByteBuf();
+                                        _buf.WriteBool(false);
+                                        insertCommand.Parameters[index++].Value = _buf.Bytes;
+                                        break;
+                                    }
+                                    case SqliteType.Integer:
+                                    {
+                                        insertCommand.Parameters[index++].Value = 0;
+                                        break;
+                                    }
+                                    case SqliteType.Real:
+                                    {
+                                        insertCommand.Parameters[index++].Value = 0;
+                                        break;
+                                    }
+                                    case SqliteType.Text:
+                                    {
+                                        insertCommand.Parameters[index++].Value = "";
+                                        break;
+                                    }
+                                        
                                 }
                             }
                             else
                             {
-                                record.Data.Fields[j].Apply(SQLiteDataVisiter.Ins, insertCommand.Parameters[index++]);
+                                if (defFields[j].CType.IsBean && SQLiteUtil.IsKeyIndex(defFields[j].Name, table))
+                                {
+                                    foreach (var field in ((DBean)record.Data.Fields[j]).Fields)
+                                    {
+                                        field.Apply(SQLiteDataVisiter.Ins, insertCommand.Parameters[index++]);
+                                    }
+                                }
+                                else
+                                {
+                                    record.Data.Fields[j].Apply(SQLiteDataVisiter.Ins, insertCommand.Parameters[index++]);
+                                }
                             }
+                        }
+
+                        if (record.Data.Type.IsAbstractType)
+                        {
+                            insertCommand.Parameters[index].Value = record.Data.ImplType.Id;
                         }
 
                         insertCommand.ExecuteNonQuery();

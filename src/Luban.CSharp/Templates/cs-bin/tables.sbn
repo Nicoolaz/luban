@@ -12,10 +12,10 @@ public partial class {{__name}}
     public {{table.full_name}} {{format_property_name __code_style table.name}} {get; }
     {{~end~}}
 
-    public {{__name}}(System.Func<string, ByteBuf> loader)
+    public {{__name}}(SqliteConnection conn)
     {
         {{~for table in __tables ~}}
-        {{format_property_name __code_style table.name}} = new {{table.full_name}}(loader("{{table.output_data_file}}"));
+        {{format_property_name __code_style table.name}} = new {{table.full_name}}(conn);
         {{~end~}}
         ResolveRef();
     }

@@ -55,7 +55,7 @@ public class DefBean : DefTypeBase
 
     public override string TypeName => Name + (ConnectedTable != null ? "Define" : "");
 
-    public bool IsTableBean => ConnectedTable != null;
+    public bool IsTableBean => ConnectedTable != null || (ParentDefType != null && ParentDefType.IsTableBean);
     public DefTable ConnectedTable { get; set; }
     //YK End
 

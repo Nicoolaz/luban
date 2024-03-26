@@ -55,20 +55,20 @@ public class DotNetSqliteUnderlyingDeserializeVisitor : ITypeFuncVisitor<string,
 
     public string Accept(TDateTime type, string fieldName, string readerName, int index)
     {
-        return $"{fieldName} = {readerName}.GetDateTime({index});";
+        return $"{fieldName} = {readerName}.GetDateTime({index}).Ticks;";
     }
 
     public string Accept(TBean type, string fieldName, string readerName, int index)
     {
-        if (type.DefBean.HasTag("IsTableBean"))
+        if (type.DefBean.IsTableBean)
         {
-            return type.Apply(BinaryUnderlyingDeserializeVisitorTabtoy.Ins, readerName, fieldName, 0);
+            return type.Apply(BinaryUnderlyingDeserializeVisitor.Ins, readerName, fieldName, 0);
         }
         else
         {
             var s = new StringBuilder();
             s.AppendLine($"_buf.Replace((byte[]){readerName}[{index}]);");
-            s.AppendLine(type.Apply(BinaryUnderlyingDeserializeVisitorTabtoy.Ins, "_buf", fieldName , 0));
+            s.AppendLine(type.Apply(BinaryUnderlyingDeserializeVisitor.Ins, "_buf", fieldName , 0));
             return s.ToString();
         }
     }

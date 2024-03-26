@@ -1,6 +1,7 @@
 using Microsoft.Data.Sqlite;
 using Luban.DataTarget;
 using Luban.Defs;
+using NLog;
 
 namespace Luban.DataExporter.Builtin.SQLite;
 
@@ -17,8 +18,8 @@ public class SQLiteExporter : DataExporterBase
             List<Task> tasks = new List<Task>();
             foreach (var table in tables)
             {
-                tasks.Add(Task.Run(() =>
-                {
+                // tasks.Add(Task.Run(() =>
+                // {
                     using (var conn = SQLiteUtil.CreateAndConnectToDB(dbFilePath))
                     {
                         try
@@ -31,7 +32,7 @@ public class SQLiteExporter : DataExporterBase
                         }
                         catch (Exception e)
                         {
-                            throw e;
+                            var __e = e;
                         }
                         finally
                         {
@@ -40,7 +41,7 @@ public class SQLiteExporter : DataExporterBase
                         
                         
                     }
-                }));
+                // }));
             }
 
             Task.WaitAll(tasks.ToArray());

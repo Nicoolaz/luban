@@ -12,6 +12,7 @@ public class SQLiteDataVisiter: IDataActionVisitor<SqliteParameter>
 {
 
     public static new SQLiteDataVisiter Ins { get; } = new SQLiteDataVisiter();
+    
     public void Accept(DBool type, SqliteParameter x)
     {
         x.Value = type.Value;
