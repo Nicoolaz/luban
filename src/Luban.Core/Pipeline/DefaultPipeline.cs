@@ -2,6 +2,7 @@ using System.Text;
 using Luban.CodeTarget;
 using Luban.DataTarget;
 using Luban.Defs;
+using Luban.L10N;
 using Luban.OutputSaver;
 using Luban.PostProcess;
 using Luban.RawDefs;
@@ -76,6 +77,7 @@ public class DefaultPipeline : IPipeline
         {
             throw new Exception("导表检查失败，具体信息请查看日志！");
         }
+        ProcessL10N();
     }
 
     protected void DoValidate()
@@ -84,6 +86,14 @@ public class DefaultPipeline : IPipeline
         var v = new DataValidatorContext(_defAssembly);
         v.ValidateTables(_genCtx.Tables);
         s_logger.Info("validation end");
+    }
+
+    protected void ProcessL10N()
+    {
+        if (_genCtx.TextProvider != null)
+        {
+            _genCtx.TextProvider.ProcessDatas();
+        }
     }
 
     protected void ProcessTargets()
@@ -184,6 +194,7 @@ public class DefaultPipeline : IPipeline
         s_logger.Info("process code target:{} begin", name);
         var outputManifest = new OutputFileManifest(name, OutputType.Code);
         GenerationContext.CurrentCodeTarget = codeTarget;
+        codeTarget.ValidateDefinition(_genCtx);
         codeTarget.Handle(_genCtx, outputManifest);
 
         outputManifest = PostProcess(BuiltinOptionNames.CodePostprocess, outputManifest);

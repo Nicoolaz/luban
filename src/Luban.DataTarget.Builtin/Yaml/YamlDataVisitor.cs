@@ -77,7 +77,7 @@ public class YamlDataVisitor : IDataFuncVisitor<YamlNode>
 
     public YamlNode Accept(DDateTime type)
     {
-        return ToPlainNode(type.UnixTimeOfCurrentContext.ToString());
+        return ToPlainNode(type.UnixTimeOfCurrentContext().ToString());
     }
 
     public YamlNode Accept(DBean type)

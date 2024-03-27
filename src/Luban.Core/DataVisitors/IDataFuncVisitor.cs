@@ -111,3 +111,4 @@ public interface IDataFuncVisitor<T1, T2, TR>
     TR Accept(DUint type, T1 x, T2 y);
     //YK End
 }
+
