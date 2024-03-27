@@ -201,6 +201,7 @@ public class DefTable : DefTypeBase
                             if (IndexField == null)
                             {
                                 IndexField = f;
+                                Index = f.Name;
                                 IndexFieldIdIndex = i;
                             }
 
