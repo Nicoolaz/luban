@@ -23,4 +23,11 @@ public abstract class DataTargetBase : IDataTarget
     {
         throw new NotSupportedException();
     }
+
+    //YK Begin
+    public virtual void ExportCustom(List<DefTable> tables, OutputFileManifest manifest, GenerationContext ctx)
+    {
+        throw new NotSupportedException();
+    }
+    //YK End
 }

@@ -21,4 +21,7 @@ public interface IDataTarget
     OutputFile ExportTables(List<DefTable> tables);
 
     OutputFile ExportRecord(DefTable table, Record record);
+    
+    //YK Begin
+    void ExportCustom(List<DefTable> tables, OutputFileManifest manifest, GenerationContext ctx);
 }

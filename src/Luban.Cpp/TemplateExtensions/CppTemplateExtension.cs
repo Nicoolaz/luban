@@ -11,6 +11,8 @@ public class CppTemplateExtension : ScriptObject
 {
     public static string MakeTypeCppName(DefTypeBase type)
     {
+        TBean bean;
+        
         return TypeUtil.MakeCppFullName(type.Namespace, type.Name);
     }
 

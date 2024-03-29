@@ -41,6 +41,13 @@ public abstract class DataTransfomerBase : IDataTransformer, IDataFuncVisitor2<D
     {
         return data;
     }
+    
+    //YK Begin
+    DType IDataFuncVisitor2<DType>.Accept(DUint data, TType type)
+    {
+        return data;
+    }
+    //YK End
 
     DType IDataFuncVisitor2<DType>.Accept(DLong data, TType type)
     {
@@ -71,6 +78,8 @@ public abstract class DataTransfomerBase : IDataTransformer, IDataFuncVisitor2<D
     {
         return data;
     }
+    
+   
 
     DType IDataFuncVisitor2<DType>.Accept(DBean data, TType type)
     {
@@ -206,4 +215,6 @@ public abstract class DataTransfomerBase : IDataTransformer, IDataFuncVisitor2<D
         }
         return new DMap(data.Type, newDatas);
     }
+
+    
 }

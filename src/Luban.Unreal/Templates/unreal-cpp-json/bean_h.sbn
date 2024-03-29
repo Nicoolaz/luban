@@ -1,0 +1,24 @@
+#pragma once
+
+{{~if __this.is_table_bean~}}
+#include "CoreMinimal.h"
+#include "UObject/ConstructorHelpers.h"
+#include "Engine/DataTable.h"
+{{~end~}}
+{{generate_extra_include __this}}
+
+#include "{{__name}}.generate.h"
+
+USTRUCT(BlueprintType)
+struct {{__api_name}} {{__name}} : {{~if __parent_def_type~}} public {{make_cpp_name __parent_def_type}} {{~else if __this.is_table_bean~}} public FTableRowBase {{~end~}}
+{
+    GENERATED_USTRUCT_BODY()
+    
+    {{~ for field in __export_fields ~}}
+        {{~if field.comment != '' ~}}
+    /** {{escape_comment field.comment}} **/
+        {{~end~}}
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="LubanConfig")
+    {{declaring_type_name field.ctype}} {{format_field_name __code_style field.name}};
+    {{~end~}}
+}

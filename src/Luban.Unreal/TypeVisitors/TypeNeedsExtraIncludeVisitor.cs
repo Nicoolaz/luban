@@ -1,0 +1,18 @@
+using Luban.Types;
+using Luban.TypeVisitors;
+
+namespace Luban.Unreal.TypeVisitors;
+
+public class TypeNeedsExtraIncludeVisitor : AllFalseVisitor
+{
+    public static TypeNeedsExtraIncludeVisitor Ins { get; } = new TypeNeedsExtraIncludeVisitor();
+    public override bool Accept(TBean type)
+    {
+        return true;
+    }
+
+    public override bool Accept(TEnum type)
+    {
+        return true;
+    }
+}

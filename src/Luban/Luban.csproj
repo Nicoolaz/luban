@@ -57,6 +57,7 @@
       <ProjectReference Include="..\Luban.Python\Luban.Python.csproj" />
       <ProjectReference Include="..\Luban.Schema.Builtin\Luban.Schema.Builtin.csproj" />
       <ProjectReference Include="..\Luban.Typescript\Luban.Typescript.csproj" />
+      <ProjectReference Include="..\Luban.Unreal\Luban.Unreal.csproj" />
     </ItemGroup>
 
     <ItemGroup>

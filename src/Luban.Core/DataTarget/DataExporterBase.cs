@@ -55,7 +55,7 @@ public abstract class DataExporterBase : IDataExporter
     //YK Begin
     protected virtual void ExportCustom(List<DefTable> tables, OutputFileManifest manifest, IDataTarget dataTarget, GenerationContext ctx)
     {
-
+        dataTarget.ExportCustom(tables, manifest, ctx);
     }
     //YK End
 }

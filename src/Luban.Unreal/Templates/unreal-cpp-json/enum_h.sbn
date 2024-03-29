@@ -1,0 +1,12 @@
+#pragma once
+
+UENUM(BlueprintType)
+enum class {{__name}} : uint8
+{
+    {{~for item in __enum.items~}}
+        {{~if item.comment != ''~}}
+    /** {{escape_comment item.comment}} **/
+        {{~end~}}
+    {{format_enum_item_name __code_style item.name}} = {{item.value}} UMETA(DisplayName = "{{__enum.alias_or_name}}"),
+    {{~end~}}
+}
