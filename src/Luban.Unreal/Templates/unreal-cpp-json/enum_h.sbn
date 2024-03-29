@@ -9,4 +9,4 @@ enum class {{__name}} : uint8
         {{~end~}}
     {{format_enum_item_name __code_style item.name}} = {{item.value}} UMETA(DisplayName = "{{__enum.alias_or_name}}"),
     {{~end~}}
-}
+};

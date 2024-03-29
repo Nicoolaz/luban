@@ -30,14 +30,43 @@ public class UnrealTemplateExtension : ScriptObject
     public static string GenerateExtraInclude(DefBean bean)
     {
         var includes = new StringBuilder();
-        string packageDir = EnvManager.Current.GetOptionOrDefault("", ConstStrings.PackageDirCfgName, true, ConstStrings.IncludePerfix);
+        var names = new HashSet<string>();
         foreach (var field in bean.Fields)
         {
-            if (field.CType.Apply(TypeNeedsExtraIncludeVisitor.Ins))
+            
+            if (field.CType.Apply(TypeNeedsExtraIncludeVisitor.Ins) )
             {
-                includes.AppendLine($"#include \"{packageDir}{field.CType.Apply(UnrealTypeNameVisitor.Ins)}.h\"");
+                GetHeaderNames(names, field.CType, includes);
             }
         }
+        
         return includes.ToString();
+    }
+
+    private static void GetHeaderNames(HashSet<string> names, TType type, StringBuilder sb)
+    {
+        if (type.IsCollection)
+        {
+            if (type is TMap)
+            {
+                GetHeaderNames(names, (type as TMap).KeyType, sb);
+                GetHeaderNames(names, (type as TMap).ValueType, sb);
+            }
+            else
+            {
+                GetHeaderNames(names, type.ElementType, sb);
+            }
+        }
+        else
+        {
+            var name = type.Apply(UnrealTypeNameVisitor.Ins);
+            if (type.Apply(TypeNeedsExtraIncludeVisitor.Ins) && !names.Contains(name))
+            {
+                names.Add(name);
+                sb.AppendLine($"#include \"{EnvManager.Current.GetOptionOrDefault("", ConstStrings.PackageDirCfgName, true, ConstStrings.IncludePerfix)}/{name}.h\"");
+            }
+                
+        }
+        
     }
 }

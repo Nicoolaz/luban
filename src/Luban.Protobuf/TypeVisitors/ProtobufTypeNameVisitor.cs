@@ -87,7 +87,7 @@ public class ProtobufTypeNameVisitor : ITypeFuncVisitor<string>
     //YK Begin
     public string Accept(TUint type)
     {
-        return "uint32";
+        return "int64";
     }
     //YK End
 }

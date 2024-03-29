@@ -15,4 +15,24 @@ public class TypeNeedsExtraIncludeVisitor : AllFalseVisitor
     {
         return true;
     }
+
+    public override bool Accept(TArray type)
+    {
+        return type.ElementType.Apply(this);
+    }
+
+    public override bool Accept(TList type)
+    {
+        return type.ElementType.Apply(this);
+    }
+
+    public override bool Accept(TMap type)
+    {
+        return type.KeyType.Apply(this) || type.ValueType.Apply(this);
+    }
+
+    public override bool Accept(TSet type)
+    {
+        return type.ElementType.Apply(this);
+    }
 }

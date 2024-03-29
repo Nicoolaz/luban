@@ -7,10 +7,10 @@
 {{~end~}}
 {{generate_extra_include __this}}
 
-#include "{{__name}}.generate.h"
+#include "{{__name}}.generated.h"
 
 USTRUCT(BlueprintType)
-struct {{__api_name}} {{__name}} : {{~if __parent_def_type~}} public {{make_cpp_name __parent_def_type}} {{~else if __this.is_table_bean~}} public FTableRowBase {{~end~}}
+struct {{__api_name}} {{__name}} {{~if __parent_def_type~}} : public {{make_cpp_name __parent_def_type}} {{~else if __this.is_table_bean~}} : public FTableRowBase {{~end~}}
 {
     GENERATED_USTRUCT_BODY()
     
@@ -21,4 +21,4 @@ struct {{__api_name}} {{__name}} : {{~if __parent_def_type~}} public {{make_cpp_
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="LubanConfig")
     {{declaring_type_name field.ctype}} {{format_field_name __code_style field.name}};
     {{~end~}}
-}
+};
