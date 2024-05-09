@@ -10,7 +10,8 @@ public class RawTable
 
     public string Index { get; set; }
     
-    //YK Begin 对Index扩展
+    //YK Begin 对Index扩展,添加SourceFile
+    public string SourceFileName { get; set; } = "";
     public string IndexMode { get; set; }
     //YK End
 

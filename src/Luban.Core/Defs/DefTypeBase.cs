@@ -11,6 +11,7 @@ public abstract class DefTypeBase
     public string Name { get; set; }
 
     //YK Begin
+    public string SourceFileName { get; set; }
     public virtual string TypeName => Name;
     //YK End
 

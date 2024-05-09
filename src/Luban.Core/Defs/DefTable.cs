@@ -50,6 +50,7 @@ public class DefTable : DefTypeBase
     public DefTable(RawTable b)
     {
         Name = b.Name;
+        SourceFileName = b.SourceFileName.Replace("\\", "/");
         Namespace = b.Namespace;
         Index = b.Index;
         IndexMode = b.IndexMode;

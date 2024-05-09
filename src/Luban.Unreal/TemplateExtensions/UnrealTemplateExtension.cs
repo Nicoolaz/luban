@@ -1,6 +1,7 @@
 using System.Text;
 using Luban.Defs;
 using Luban.Types;
+using Luban.Unreal.DataTarget;
 using Luban.Unreal.TypeVisitors;
 using Luban.Utils;
 using Scriban.Runtime;
@@ -19,7 +20,16 @@ public class UnrealTemplateExtension : ScriptObject
     }
     public static string MakeCppName(DefTypeBase type)
     {
-        return TypeUtil.MakeCppFullName("", TypeNamePerfix(type) + type.Name);
+        return TypeUtil.MakeCppFullName("", TypeNamePerfix(type) + type.Name + ConstStrings.GetHeaderSuffix());
+    }
+
+    public static string MakeCppNameWithoutPerfix(DefTypeBase type)
+    {
+        return TypeUtil.MakeCppFullName("", type.Name + ConstStrings.GetHeaderSuffix());
+    }
+    public static string GetDefaultValueStr(TType type)
+    {
+        return type.Apply(UnrealMemberDefaultVisitor.Ins);
     }
 
     public static string DeclaringTypeName(TType type)
@@ -59,7 +69,7 @@ public class UnrealTemplateExtension : ScriptObject
         }
         else
         {
-            var name = type.Apply(UnrealTypeNameVisitor.Ins);
+            var name = type.Apply(UnrealFileNameVisitor.Ins);
             if (type.Apply(TypeNeedsExtraIncludeVisitor.Ins) && !names.Contains(name))
             {
                 names.Add(name);

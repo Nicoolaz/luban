@@ -26,6 +26,10 @@ public class RawEnum
     public bool IsUniqueItemId { get; set; }
 
     public string Comment { get; set; }
+    
+    //YK Begin :Add SourceFile
+    public string SourceFileName { get; set; } = "";
+    //YK End
 
     public Dictionary<string, string> Tags { get; set; }
 

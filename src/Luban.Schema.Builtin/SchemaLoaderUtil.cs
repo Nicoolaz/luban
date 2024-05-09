@@ -28,6 +28,7 @@ public static class SchemaLoaderUtil
         var p = new RawTable()
         {
             Name = name,
+            SourceFileName = input,
             Namespace = module,
             ValueType = valueType,
             ReadSchemaFromFile = readSchemaFromFile,

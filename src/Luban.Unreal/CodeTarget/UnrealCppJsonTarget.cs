@@ -26,8 +26,9 @@ public class UnrealCppJsonTarget : TemplateCodeTargetBase
         "typename", "union", "unsigned", "using", "virtual", "void", "volatile", "wchar_t", "while", "xor", "xor_eq",
         "Name"/* Name is a default variable for unreal data table */, "Default",
     };
-    public override string FileHeader => CommonFileHeaders.AUTO_GENERATE_C_LIKE;
+    public override string FileHeader => ConstStrings.AUTO_GENERATE_UNREAL_C_LIKE;
     protected override string FileSuffixName => ".cpp";
+
 
     public override void Handle(GenerationContext ctx, OutputFileManifest manifest)
     {
@@ -35,35 +36,37 @@ public class UnrealCppJsonTarget : TemplateCodeTargetBase
         var tasks = new List<Task<OutputFile>>();
         foreach (var bean in ctx.ExportBeans)
         {
-            tasks.Add(Task.Run(() =>
-            {
-                var writer = new CodeWriter();
-                GenerateBeanCpp(ctx, bean, writer);
-                return new OutputFile() { File = $"{GetFileNameWithoutExtByTypeName(UnrealTemplateExtension.MakeCppName(bean))}{FileSuffixName}", Content = writer.ToResult(FileHeader) };
-            }));
+            // tasks.Add(Task.Run(() =>
+            // {
+            //     var writer = new CodeWriter();
+            //     GenerateBeanCpp(ctx, bean, writer);
+            //     return new OutputFile() { File = $"{GetFileNameWithoutExtByTypeName(UnrealTemplateExtension.MakeCppName(bean))}{FileSuffixName}", Content = writer.ToResult(FileHeader) };
+            // }));
             
             tasks.Add(Task.Run(() =>
             {
                 var writer = new CodeWriter();
+                var header = string.Format(FileHeader, bean.SourceFileName);
                 GenerateBeanHeader(ctx, bean, writer);
-                return new OutputFile() { File = $"{GetFileNameWithoutExtByTypeName(UnrealTemplateExtension.MakeCppName(bean))}.h", Content = writer.ToResult(FileHeader) };
+                return new OutputFile() { File = $"{GetFileNameWithoutExtByTypeName(UnrealTemplateExtension.MakeCppNameWithoutPerfix(bean))}.h", Content = writer.ToResult(header) };
             }));
         }
 
         foreach (var @enum in ctx.ExportEnums)
         {
-            tasks.Add(Task.Run(() =>
-            {
-                var writer = new CodeWriter();
-                GenerateEnumCpp(ctx, @enum, writer);
-                return new OutputFile() { File = $"{GetFileNameWithoutExtByTypeName(UnrealTemplateExtension.MakeCppName(@enum))}{FileSuffixName}", Content = writer.ToResult(FileHeader) };
-            }));
+            // tasks.Add(Task.Run(() =>
+            // {
+            //     var writer = new CodeWriter();
+            //     GenerateEnumCpp(ctx, @enum, writer);
+            //     return new OutputFile() { File = $"{GetFileNameWithoutExtByTypeName(UnrealTemplateExtension.MakeCppName(@enum))}{FileSuffixName}", Content = writer.ToResult(FileHeader) };
+            // }));
             
             tasks.Add(Task.Run(() =>
             {
                 var writer = new CodeWriter();
                 GenerateEnumHeader(ctx, @enum, writer);
-                return new OutputFile() { File = $"{GetFileNameWithoutExtByTypeName(UnrealTemplateExtension.MakeCppName(@enum))}.h", Content = writer.ToResult(FileHeader) };
+                var header = string.Format(FileHeader, @enum.SourceFileName);
+                return new OutputFile() { File = $"{GetFileNameWithoutExtByTypeName(UnrealTemplateExtension.MakeCppNameWithoutPerfix(@enum))}.h", Content = writer.ToResult(header) };
             }));
         }
         

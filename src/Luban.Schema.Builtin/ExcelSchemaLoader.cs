@@ -184,6 +184,7 @@ public class ExcelSchemaLoader : SchemaLoaderBase
             {
                 Name = name,
                 Namespace = module,
+                SourceFileName = fileName,
                 IsFlags = (data.GetField("flags") as DBool).Value,
                 Tags = DefUtil.ParseAttrs((data.GetField("tags") as DString).Value),
                 Comment = (data.GetField("comment") as DString).Value,
@@ -298,6 +299,7 @@ public class ExcelSchemaLoader : SchemaLoaderBase
             {
                 Name = name,
                 Namespace = module,
+                SourceFileName = fileName,
                 IsValueType = ((DBool)data.GetField("valueType")).Value,
                 Sep = sep,
                 Alias = alias,

@@ -7,18 +7,17 @@
 {{~end~}}
 {{generate_extra_include __this}}
 
-#include "{{__name}}.generated.h"
+#include "{{make_cpp_name_without_perfix __this}}.generated.h"
 
 USTRUCT(BlueprintType)
 struct {{__api_name}} {{__name}} {{~if __parent_def_type~}} : public {{make_cpp_name __parent_def_type}} {{~else if __this.is_table_bean~}} : public FTableRowBase {{~end~}}
 {
     GENERATED_USTRUCT_BODY()
-    
     {{~ for field in __export_fields ~}}
         {{~if field.comment != '' ~}}
     /** {{escape_comment field.comment}} **/
         {{~end~}}
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="LubanConfig")
-    {{declaring_type_name field.ctype}} {{format_field_name __code_style field.name}};
+    {{declaring_type_name field.ctype}} {{format_field_name __code_style field.name}}{{get_default_value_str field.ctype}};
     {{~end~}}
 };

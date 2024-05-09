@@ -21,6 +21,7 @@ public class RawBean
     public string Sep { get; set; }
     
     //YK ADD Begin
+    public string SourceFileName { get; set; } = "";
     public bool UseDictReader { get; set; }
     //YK ADD End
 

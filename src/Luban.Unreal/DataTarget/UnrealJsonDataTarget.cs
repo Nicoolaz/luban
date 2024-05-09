@@ -3,6 +3,7 @@ using Luban.Defs;
 using Luban.DataExporter.Builtin.Json;
 using System.Text.Json;
 using Luban.RawDefs;
+using Luban.Unreal.TemplateExtensions;
 using Luban.Utils;
 
 namespace Luban.Unreal.DataTarget;
@@ -56,12 +57,13 @@ public class UnrealJsonDataTarget : DataTargetBase
 
     private void WriteUnrealImportSetting(DefTable table, Utf8JsonWriter writer)
     {
-        var outputDir = EnvManager.Current.GetOptionOrDefault("", BuiltinOptionNames.OutputDataDir, true, "");
+        var outputDir = EnvManager.Current.GetOptionOrDefault("unreal-json", BuiltinOptionNames.OutputDataDir, true, "");
+        outputDir = Path.GetFullPath(outputDir);
         writer.WriteStartObject();
         writer.WritePropertyName("GroupName");
         writer.WriteStringValue("LubanConfig");
         writer.WritePropertyName("DestinationPath");
-        writer.WriteStringValue($"Table/LubanConfig");
+        writer.WriteStringValue(EnvManager.Current.GetOptionOrDefault("", ConstStrings.UnrealImportDestinationParamName, true, "Table/LubanConfig"));
         writer.WritePropertyName("FactoryName");
         writer.WriteStringValue("ReimportDataTableFactory");
         writer.WritePropertyName("Filenames");
@@ -73,7 +75,7 @@ public class UnrealJsonDataTarget : DataTargetBase
         writer.WritePropertyName("ImportType");
         writer.WriteStringValue("ECSV_DataTable");
         writer.WritePropertyName("ImportRowStruct");
-        writer.WriteStringValue(TypeUtil.MakeCppFullName("", table.ValueTType.DefBean.Name));
+        writer.WriteStringValue(UnrealTemplateExtension.MakeCppNameWithoutPerfix(table.ValueTType.DefBean));
         writer.WriteEndObject();
         writer.WritePropertyName("bSkipReadOnly");
         writer.WriteStringValue("true");

@@ -28,6 +28,7 @@ public class BeanSchemaFromExcelHeaderLoader : IBeanSchemaLoader
 
         cb.Tags = new Dictionary<string, string>();
         cb.Tags["IsTableBean"] = "true";
+        cb.SourceFileName = fileName;
 
         (var actualFile, var sheetName) = FileUtil.SplitFileAndSheetName(FileUtil.Standardize(fileName));
         using var inputStream = new FileStream(actualFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);

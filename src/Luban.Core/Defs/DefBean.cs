@@ -89,6 +89,7 @@ public class DefBean : DefTypeBase
     public DefBean(RawBean b)
     {
         Name = b.Name;
+        SourceFileName = b.SourceFileName.Replace("\\", "/");
         Namespace = b.Namespace;
         Parent = b.Parent;
         Id = TypeUtil.ComputeCfgHashIdByName(FullName);

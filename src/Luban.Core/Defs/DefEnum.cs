@@ -98,6 +98,7 @@ public class DefEnum : DefTypeBase
     public DefEnum(RawEnum e)
     {
         Name = e.Name;
+        SourceFileName = e.SourceFileName.Replace("\\", "/");
         Namespace = e.Namespace;
         IsFlags = e.IsFlags;
         IsUniqueItemId = e.IsUniqueItemId;
