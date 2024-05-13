@@ -25,6 +25,9 @@
         <None Update="Templates\unreal-cpp-json\enum_cpp.sbn">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
+        <None Update="Templates\unreal-cpp-json\tables_h.sbn">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
 
 </Project>

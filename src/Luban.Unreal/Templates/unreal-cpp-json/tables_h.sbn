@@ -1,0 +1,53 @@
+#pragma once
+
+#include "CoreMinimal.h"
+{{~ for table in __tables ~}}
+#include "{{make_cpp_name_without_perfix table.value_ttype.def_bean}}.h"
+{{~ end ~}}
+#include "DataTableStreamingLibrary.generated.h"
+
+
+
+UCLASS(Transient)
+class {{__api_name}} UDataTables : public UObject
+{
+    GENERATED_BODY()
+private:
+    {{~ for table in __tables ~}}
+    UPROPERTY()
+    TObjectPtr<UDataTable> {{table.name}};
+    {{~ end ~}}
+public:
+    
+    {{~ for table in __tables ~}}
+    UFUNCTION(BlueprintCallable)
+    const UDataTable* Get{{table.name}}()
+    {
+        if(!{{table.name}})
+        {
+            {{table.name}} = *LoadObject<UDataTable>(NULL, TEXT("{{__package_name}}{{table.output_data_file}}.{{table.output_data_file}}"));
+        }
+        if(!{{table.name}})
+        {
+            UE_LOG(LogTemp, Error, TEXT("Can not get data table %s!!"), TEXT("{{table.name}}"));
+        }
+        return {{table.name}}.Get();
+    }
+    
+    const {{make_cpp_name table.value_ttype.def_bean}}* Get{{table.name}}RowByName(FName rowName)
+    {
+        const UDataTable* table = Get{{table.name}}();
+        if(table)
+            return table->FindRow<{{make_cpp_name table.value_ttype.def_bean}}>(rowName, nullptr);
+        
+        return nullptr;
+    }
+    
+    void Get{{table.name}}Rows(OUT TArray<{{make_cpp_name table.value_ttype.def_bean}}*>& rows)
+    {   
+        const UDataTable* table = Get{{table.name}}();
+        if(table)   
+            table->GetAllRows<{{make_cpp_name table.value_ttype.def_bean}}>(nullptr, rows);
+    }
+    {{~ end ~}} 
+};

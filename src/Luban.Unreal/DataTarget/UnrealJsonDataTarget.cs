@@ -63,7 +63,7 @@ public class UnrealJsonDataTarget : DataTargetBase
         writer.WritePropertyName("GroupName");
         writer.WriteStringValue("LubanConfig");
         writer.WritePropertyName("DestinationPath");
-        writer.WriteStringValue(EnvManager.Current.GetOptionOrDefault("", ConstStrings.UnrealImportDestinationParamName, true, "Table/LubanConfig"));
+        writer.WriteStringValue(EnvManager.Current.GetOptionOrDefault("", ConstStrings.UnrealImportDestinationParamName, true, "Game/Table/LubanConfig"));
         writer.WritePropertyName("FactoryName");
         writer.WriteStringValue("ReimportDataTableFactory");
         writer.WritePropertyName("Filenames");

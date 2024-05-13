@@ -70,6 +70,14 @@ public class UnrealCppJsonTarget : TemplateCodeTargetBase
             }));
         }
         
+        tasks.Add(Task.Run(() =>
+        {
+            var writer = new CodeWriter();
+            GenerateTablesLibrary(ctx, writer);
+            var header = CommonFileHeaders.AUTO_GENERATE_C_LIKE;
+            return new OutputFile() { File = $"DataTableStreamingLibrary.h", Content = writer.ToResult(header) };
+        }));
+        
 
         Task.WaitAll(tasks.ToArray());
         foreach (var task in tasks)
@@ -78,6 +86,21 @@ public class UnrealCppJsonTarget : TemplateCodeTargetBase
         }
     }
 
+    protected void GenerateTablesLibrary(GenerationContext ctx, CodeWriter writer)
+    {
+        var template = GetTemplate("tables_h");
+        var tplCtx = CreateTemplateContext(template);
+        var extraEnvs = new ScriptObject()
+        {
+            { "__ctx", ctx }, 
+            { "__tables", ctx.Tables }, 
+            { "__api_name", EnvManager.Current.GetOptionOrDefault("", ConstStrings.APINameOption, true, ConstStrings.APIName) },
+            { "__code_style", CodeStyle},
+            { "__package_name", EnvManager.Current.GetOptionOrDefault("", ConstStrings.UnrealImportDestinationParamName, true, "Game/Table/LubanConfig")},
+        };
+        tplCtx.PushGlobal(extraEnvs);
+        writer.Write(template.Render(tplCtx));
+    }
     protected void GenerateBeanHeader(GenerationContext ctx, DefBean bean, CodeWriter writer)
     {
         var template = GetTemplate("bean_h");
