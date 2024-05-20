@@ -14,11 +14,16 @@ public class UnrealFileNameVisitor:DecoratorFuncVisitor<string>
 
     public override string Accept(TBean type)
     {
-        return UnrealTemplateExtension.MakeCppNameWithoutPerfix(type.DefBean);
+        return $"{EnvManager.Current.GetOptionOrDefault("", ConstStrings.PackageDirCfgName, true, ConstStrings.IncludePerfix)}/{UnrealTemplateExtension.MakeCppNameWithoutPerfix(type.DefBean)}";
     }
 
     public override string Accept(TEnum type)
     {
-        return UnrealTemplateExtension.MakeCppNameWithoutPerfix(type.DefEnum);
+        return $"{EnvManager.Current.GetOptionOrDefault("", ConstStrings.PackageDirCfgName, true, ConstStrings.IncludePerfix)}/{UnrealTemplateExtension.MakeCppNameWithoutPerfix(type.DefEnum)}";
+    }
+
+    public override string Accept(TString type)
+    {
+        return type.GetTag("header");
     }
 }

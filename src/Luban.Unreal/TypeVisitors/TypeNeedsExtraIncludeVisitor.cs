@@ -16,6 +16,11 @@ public class TypeNeedsExtraIncludeVisitor : AllFalseVisitor
         return true;
     }
 
+    public override bool Accept(TString type)
+    {
+        return type.HasTag("unrealType") && type.HasTag("header");
+    }
+
     public override bool Accept(TArray type)
     {
         return type.ElementType.Apply(this);

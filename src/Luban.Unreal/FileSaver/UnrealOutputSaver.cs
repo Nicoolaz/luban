@@ -33,15 +33,15 @@ public class UnrealOutputSaver : OutputSaverBase
         string ret = $"{outputDir}/{outputFile.File}";
         if (fileManifest.OutputType == OutputType.Code)
         {
-            var packageDir = EnvManager.Current.GetOptionOrDefault("", ConstStrings.PackageDirCfgName, true, ConstStrings.IncludePerfix);
-            var headFileDir = Path.Join(outputDir, ConstStrings.HeaderFileRoot, packageDir);
-            var cppFileDir = Path.Join(outputDir, ConstStrings.CppFileRoot, packageDir);
-            if (outputFile.File.EndsWith(ConstStrings.CppSufix))
-            {
-                ret = $"{cppFileDir}/{outputFile.File}";
+            //var packageDir = EnvManager.Current.GetOptionOrDefault("", ConstStrings.PackageDirCfgName, true, ConstStrings.IncludePerfix);
+            var headFileDir = outputDir;
+            //var cppFileDir = Path.Join(outputDir, ConstStrings.CppFileRoot, packageDir);
+            //if (outputFile.File.EndsWith(ConstStrings.CppSufix))
+            //{
+            //    ret = $"{cppFileDir}/{outputFile.File}";
 
-            }
-            else if (outputFile.File.EndsWith(ConstStrings.HeaderSufix))
+            //}
+            if (outputFile.File.EndsWith(ConstStrings.HeaderSufix))
             {
                 ret = $"{headFileDir}/{outputFile.File}";
 

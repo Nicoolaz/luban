@@ -3,7 +3,7 @@ namespace Luban.Unreal;
 public static class ConstStrings
 {
     public const string IncludePerfix = "Table/Luban";
-    public const string APIName = "WANG_API";
+    public const string APIName = "";
     public const string APINameOption = "unrealPluginAPIName";
     public const string DataTableNameField = "Name";
     public const string PackageDirCfgName = "unrealPackageDir";

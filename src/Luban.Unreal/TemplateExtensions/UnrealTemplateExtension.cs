@@ -73,7 +73,7 @@ public class UnrealTemplateExtension : ScriptObject
             if (type.Apply(TypeNeedsExtraIncludeVisitor.Ins) && !names.Contains(name))
             {
                 names.Add(name);
-                sb.AppendLine($"#include \"{EnvManager.Current.GetOptionOrDefault("", ConstStrings.PackageDirCfgName, true, ConstStrings.IncludePerfix)}/{name}.h\"");
+                sb.AppendLine($"#include \"{name}.h\"");
             }
                 
         }

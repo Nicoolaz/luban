@@ -50,6 +50,8 @@ public class UnrealTypeNameVisitor : ITypeFuncVisitor<string>
 
     public string Accept(TString type)
     {
+        string typeName = type.GetTag("unrealType");
+        if (!string.IsNullOrWhiteSpace(typeName)) return typeName;
         return "FString";
     }
 
