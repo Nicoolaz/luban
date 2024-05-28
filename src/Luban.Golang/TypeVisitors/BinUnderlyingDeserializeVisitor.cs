@@ -89,7 +89,7 @@ public class BinUnderlyingDeserializeVisitor : ITypeFuncVisitor<string, string, 
     }
 
     //YK Begin
-    public string Accept(TUint type, string fieldName, string bufName, string err)
+    public string Accept(TUint type, string fieldName, string bufName, string err, int depth)
     {
         return $"{{ if {fieldName}, {err} = {bufName}.ReadUint(); {err} != nil {{ {err} = errors.New(\"error\"); return }} }}";
     }

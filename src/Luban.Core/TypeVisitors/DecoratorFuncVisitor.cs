@@ -432,4 +432,9 @@ public abstract class DecoratorFuncVisitor<T1, T2, T3, T4, TR> : ITypeFuncVisito
         return DoAccept(type, a, b, c, d);
     }
 
+    public virtual TR Accept(TUint type, T1 a, T2 b, T3 c, T4 d)
+    {
+        return DoAccept(type, a, b, c, d);
+    }
+
 }

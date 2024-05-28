@@ -86,4 +86,9 @@ public class RustJsonUnderlyingDeserializeVisitor : ITypeFuncVisitor<string, str
     {
         return $"std::collections::HashMap::from_iter({json}.as_array().unwrap().iter().map(|x| {{let array = x.as_array().unwrap();({type.KeyType.Apply(this, "array[0]", "", depth + 1)}, {type.ElementType.Apply(this, "array[1]", "", depth + 1)})}}).collect::<Vec<({type.KeyType.Apply(RustDeclaringBoxTypeNameVisitor.Ins)}, {type.ElementType.Apply(RustDeclaringBoxTypeNameVisitor.Ins)})>>())".Replace("?", ".unwrap()");
     }
+
+    public string Accept(TUint type, string x, string y, int z)
+    {
+        throw new NotImplementedException();
+    }
 }

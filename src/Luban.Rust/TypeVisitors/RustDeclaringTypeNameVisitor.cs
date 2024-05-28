@@ -84,4 +84,9 @@ public class RustDeclaringTypeNameVisitor : ITypeFuncVisitor<string>
     {
         return $"std::collections::HashMap<{type.KeyType.Apply(this)}, {type.ValueType.Apply(this)}>";
     }
+
+    public string Accept(TUint type)
+    {
+        throw new NotImplementedException();
+    }
 }

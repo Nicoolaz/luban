@@ -11,7 +11,7 @@ namespace Luban.Unreal.DataTarget;
 [DataTarget("unreal-json")]
 public class UnrealJsonDataTarget : DataTargetBase
 {
-    protected override string OutputFileExt => "json";
+    protected override string DefaultOutputFileExt => "json";
     public override AggregationType AggregationType => AggregationType.Other;
     public static bool UseCompactJson => EnvManager.Current.GetBoolOptionOrDefault("json", "compact", true, false);
 

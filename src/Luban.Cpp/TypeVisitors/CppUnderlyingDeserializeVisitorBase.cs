@@ -42,7 +42,7 @@ public abstract class CppUnderlyingDeserializeVisitorBase : ITypeFuncVisitor<str
     }
     
     //YK Begin
-    public string Accept(TUint type, string bufName, string fieldName, ITypeFuncVisitor<string> typeVisitor)
+    public string Accept(TUint type, string bufName, string fieldName, int depth, ITypeFuncVisitor<string> typeVisitor)
     {
         return $"if(!{bufName}.readUint({fieldName})) return false;";
     }

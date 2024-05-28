@@ -103,4 +103,9 @@ public class BinaryUnderlyingDeserializeVisitor : ITypeFuncVisitor<string, strin
         string i = $"i{depth}";
         return $"{{let {n} = std::cmp::min({bufName}.read_size(), {bufName}.size()); let mut {e} = {ConstantStrings.MapType}::with_capacity({n} * 3 / 2);for {i} in 0..{n} {{ let {k} = {type.KeyType.Apply(this, bufName, k, depth + 1)}; let {v} = {type.ValueType.Apply(this, bufName, v, depth + 1)}; {e}.insert({k}, {v});}} {e} }}";
     }
+
+    public string Accept(TUint type, string x, string y, int z)
+    {
+        throw new NotImplementedException();
+    }
 }

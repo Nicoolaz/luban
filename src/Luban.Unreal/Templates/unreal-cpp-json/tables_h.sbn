@@ -48,7 +48,7 @@ public:
     const bool BPGet{{table.name}}RowByName(FName RowName, {{make_cpp_name table.value_ttype.def_bean}}& OutRow)
     {
         bool bResult = false;
-        const UDataTable* Table = GetOrCreateItemTable();
+        const UDataTable* Table = GetOrCreate{{table.name}}();
         {{make_cpp_name table.value_ttype.def_bean}}* RowPtr = Table->FindRow<{{make_cpp_name table.value_ttype.def_bean}}>(RowName, nullptr);
         if (RowPtr != nullptr) {
             OutRow = *RowPtr;

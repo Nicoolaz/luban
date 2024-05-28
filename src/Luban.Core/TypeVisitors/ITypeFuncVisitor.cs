@@ -181,4 +181,6 @@ public interface ITypeFuncVisitor<T, T2, T3, T4, TR>
     TR Accept(TSet type, T x, T2 y, T3 z, T4 w);
 
     TR Accept(TMap type, T x, T2 y, T3 z, T4 w);
+
+    TR Accept(TUint type, T x, T2 y, T3 z, T4 w);
 }

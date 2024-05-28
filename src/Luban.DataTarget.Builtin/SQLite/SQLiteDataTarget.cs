@@ -11,11 +11,10 @@ namespace Luban.DataExporter.Builtin.SQLite;
 [DataTarget("sqlite3")]
 public class SQLiteDataTarget : DataTargetBase
 {
-    protected override string OutputFileExt => "db";
-
     public override AggregationType AggregationType => AggregationType.Other;
-    
-    
+
+    protected override string DefaultOutputFileExt => "db";
+
     public override OutputFile ExportTable(DefTable table, List<Record> records)
     {
         throw new NotSupportedException();

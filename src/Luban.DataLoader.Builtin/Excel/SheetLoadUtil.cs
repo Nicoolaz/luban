@@ -501,7 +501,6 @@ public static class SheetLoadUtil
         return s == tag;
     }
 
-    private static List<List<Cell>> ParseRawSheetContent(IExcelDataReader reader, bool orientRow, bool headerOnly, int headerCount = 0)
     private static bool IsEmptyRow(List<Cell> row)
     {
         return row.All(c => string.IsNullOrWhiteSpace(c.Value?.ToString()));
@@ -509,7 +508,7 @@ public static class SheetLoadUtil
 
     const int maxEmptyRowCountOfInterruptParse = 10;
 
-    private static List<List<Cell>> ParseRawSheetContent(IExcelDataReader reader, bool orientRow, bool headerOnly)
+    private static List<List<Cell>> ParseRawSheetContent(IExcelDataReader reader, bool orientRow, bool headerOnly, int headerCount = 0)
     {
         // TODO 优化性能
         // 几个思路
