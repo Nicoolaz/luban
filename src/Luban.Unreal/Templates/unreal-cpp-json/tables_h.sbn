@@ -4,12 +4,12 @@
 {{~ for table in __tables ~}}
 #include "{{make_cpp_name_without_perfix table.value_ttype.def_bean}}.h"
 {{~ end ~}}
-#include "DataTableStreamingLibrary.generated.h"
+#include "DataTableSystem.generated.h"
 
 
 
-UCLASS(Transient)
-class {{__api_name}} UDataTables : public UObject
+UCLASS()
+class {{__api_name}} UDataTableSystem : public UEngineSubsystem
 {
     GENERATED_BODY()
 private:
@@ -18,10 +18,11 @@ private:
     TObjectPtr<UDataTable> {{table.name}};
     {{~ end ~}}
 public:
-    
+    UDataTableSystem() { }
+
     {{~ for table in __tables ~}}
-    UFUNCTION(BlueprintCallable)
-    const UDataTable* Get{{table.name}}()
+    UFUNCTION(BlueprintCallable, Category="DataStreamingLibrary")
+    const UDataTable* GetOrCreate{{table.name}}()
     {
         if(!{{table.name}})
         {
@@ -36,16 +37,29 @@ public:
     
     const {{make_cpp_name table.value_ttype.def_bean}}* Get{{table.name}}RowByName(FName rowName)
     {
-        const UDataTable* table = Get{{table.name}}();
+        const UDataTable* table = GetOrCreate{{table.name}}();
         if(table)
             return table->FindRow<{{make_cpp_name table.value_ttype.def_bean}}>(rowName, nullptr);
         
         return nullptr;
     }
+
+    UFUNCTION(BlueprintCallable, Category = "DataStreamingLibrary", meta = (CustomStructureParam = "OutRow"))
+    const bool BPGet{{table.name}}RowByName(FName RowName, {{make_cpp_name table.value_ttype.def_bean}}& OutRow)
+    {
+        bool bResult = false;
+        const UDataTable* Table = GetOrCreateItemTable();
+        {{make_cpp_name table.value_ttype.def_bean}}* RowPtr = Table->FindRow<{{make_cpp_name table.value_ttype.def_bean}}>(RowName, nullptr);
+        if (RowPtr != nullptr) {
+            OutRow = *RowPtr;
+            bResult = true;
+        }
+        return bResult;
+    }
     
     void Get{{table.name}}Rows(OUT TArray<{{make_cpp_name table.value_ttype.def_bean}}*>& rows)
     {   
-        const UDataTable* table = Get{{table.name}}();
+        const UDataTable* table = GetOrCreate{{table.name}}();
         if(table)   
             table->GetAllRows<{{make_cpp_name table.value_ttype.def_bean}}>(nullptr, rows);
     }

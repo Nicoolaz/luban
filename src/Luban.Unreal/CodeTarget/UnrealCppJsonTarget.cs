@@ -75,7 +75,7 @@ public class UnrealCppJsonTarget : TemplateCodeTargetBase
             var writer = new CodeWriter();
             GenerateTablesLibrary(ctx, writer);
             var header = CommonFileHeaders.AUTO_GENERATE_C_LIKE;
-            return new OutputFile() { File = $"DataTableStreamingLibrary.h", Content = writer.ToResult(header) };
+            return new OutputFile() { File = $"DataTableSystem.h", Content = writer.ToResult(header) };
         }));
         
 
@@ -96,7 +96,7 @@ public class UnrealCppJsonTarget : TemplateCodeTargetBase
             { "__tables", ctx.Tables }, 
             { "__api_name", EnvManager.Current.GetOptionOrDefault("", ConstStrings.APINameOption, true, ConstStrings.APIName) },
             { "__code_style", CodeStyle},
-            { "__package_name", EnvManager.Current.GetOptionOrDefault("", ConstStrings.UnrealImportDestinationParamName, true, "Game/Table/LubanConfig")},
+            { "__package_name", EnvManager.Current.GetOptionOrDefault("", ConstStrings.UnrealImportDestinationParamName, true, "Game/Table/LubanConfig/")},
         };
         tplCtx.PushGlobal(extraEnvs);
         writer.Write(template.Render(tplCtx));
