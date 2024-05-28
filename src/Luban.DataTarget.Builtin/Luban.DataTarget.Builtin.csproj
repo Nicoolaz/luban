@@ -1,4 +1,4 @@
-<!--
+﻿<!--
   - MIT License
   -
   - Copyright (c) 2023 Code Philosophy Technology Ltd.
@@ -30,6 +30,7 @@
         <Nullable>disable</Nullable>
         <RootNamespace>Luban.DataExporter.Builtin</RootNamespace>
         <PublishAOT>true</PublishAOT>
+        <Platforms>AnyCPU</Platforms>
     </PropertyGroup>
 
     <ItemGroup>

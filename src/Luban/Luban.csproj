@@ -30,6 +30,7 @@
         <Nullable>disable</Nullable>
         <OutputType>Exe</OutputType>
         <PublishAOT>true</PublishAOT>
+        <Platforms>AnyCPU</Platforms>
     </PropertyGroup>
 
     <ItemGroup>

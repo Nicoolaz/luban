@@ -1,14 +1,66 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
+using System.Text.RegularExpressions;
 using Luban.RawDefs;
 using Luban.Schema;
 using Luban.Utils;
+using NLog.Targets;
 
 namespace Luban;
 
+
+internal class Group
+{
+    public List<string> Names { get; set; }
+
+    public bool Default { get; set; }
+}
+
+public class SchemaFile
+{
+    public string FileName { get; set; }
+
+    public string Type { get; set; }
+}
+
+internal class Target
+{
+    public string Name { get; set; }
+
+    public string Manager { get; set; }
+
+    public List<string> Groups { get; set; }
+
+    public string TopModule { get; set; }
+}
+
+internal class LubanConf
+{
+    public List<Group> Groups { get; set; }
+
+    public List<SchemaFile> SchemaFiles { get; set; }
+
+    public string DataDir { get; set; }
+
+    public List<Target> Targets { get; set; }
+
+    public List<string> ExcelDefaultSchema { get; set; }
+
+    public bool GroupsIsChar { get; set; }
+}
+
+[JsonSourceGenerationOptions(
+    JsonSerializerDefaults.Web,
+    AllowTrailingCommas = true,
+    DefaultBufferSize = 10)]
+[JsonSerializable(typeof(LubanConf))]
+internal partial class LubanConfContext : JsonSerializerContext { }
+
 public class GlobalConfigLoader : IConfigLoader
 {
+    
     private static readonly NLog.Logger s_logger = NLog.LogManager.GetCurrentClassLogger();
 
     private string _curDir;
@@ -16,47 +68,6 @@ public class GlobalConfigLoader : IConfigLoader
     public GlobalConfigLoader()
     {
 
-    }
-
-
-    private class Group
-    {
-        public List<string> Names { get; set; }
-
-        public bool Default { get; set; }
-    }
-
-    private class SchemaFile
-    {
-        public string FileName { get; set; }
-
-        public string Type { get; set; }
-    }
-
-    private class Target
-    {
-        public string Name { get; set; }
-
-        public string Manager { get; set; }
-
-        public List<string> Groups { get; set; }
-
-        public string TopModule { get; set; }
-    }
-
-    private class LubanConf
-    {
-        public List<Group> Groups { get; set; }
-
-        public List<SchemaFile> SchemaFiles { get; set; }
-
-        public string DataDir { get; set; }
-
-        public List<Target> Targets { get; set; }
-
-        public List<string> ExcelDefaultSchema { get; set; }
-
-        public bool GroupsIsChar { get; set; }
     }
 
     public LubanConfig Load(string fileName)
@@ -70,7 +81,8 @@ public class GlobalConfigLoader : IConfigLoader
             AllowTrailingCommas = true,
             ReadCommentHandling = JsonCommentHandling.Skip,
         };
-        var globalConf = JsonSerializer.Deserialize<LubanConf>(File.ReadAllText(fileName, Encoding.UTF8), options);
+        
+        var globalConf = JsonSerializer.Deserialize(File.ReadAllText(fileName, Encoding.UTF8), typeof(LubanConf), LubanConfContext.Default) as LubanConf;
 
         var configFileName = Path.GetFileName(fileName);
         var dataInputDir = Path.Combine(_curDir, globalConf.DataDir);

@@ -30,6 +30,7 @@
         <Nullable>disable</Nullable>
         <RootNamespace>Luban</RootNamespace>
         <PublishAOT>true</PublishAOT>
+        <Platforms>AnyCPU</Platforms>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">

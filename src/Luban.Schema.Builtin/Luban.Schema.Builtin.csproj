@@ -30,6 +30,7 @@
         <Nullable>disable</Nullable>
         <EnableDynamicLoading>true</EnableDynamicLoading>
         <PublishAOT>true</PublishAOT>
+        <Platforms>AnyCPU</Platforms>
     </PropertyGroup>
 
     <ItemGroup>
