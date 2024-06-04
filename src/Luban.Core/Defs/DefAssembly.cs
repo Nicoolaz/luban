@@ -271,17 +271,19 @@ public class DefAssembly
     {
         type = DefUtil.TrimBracePairs(type);
         int sepIndex = DefUtil.IndexOfBaseTypeEnd(type);
+        //YK Change, 增加全局tag
+        var conf = GenerationContext.GlobalConf;
         if (sepIndex > 0)
         {
             string containerTypeAndTags = DefUtil.TrimBracePairs(type.Substring(0, sepIndex));
             var elementTypeAndTags = type.Substring(sepIndex + 1);
-            var (containerType, containerTags) = DefUtil.ParseTypeAndVaildAttrs(containerTypeAndTags);
+            var (containerType, containerTags) = DefUtil.ParseTypeAndVaildAttrs(containerTypeAndTags, conf.GlobalTagsMap);
             return CreateContainerType(module, containerType, containerTags, elementTypeAndTags.Trim());
         }
         else if (type.StartsWith("[]"))
         {
             string containerTypeAndTags = "list#sep=|";
-            var (containerType, containerTags) = DefUtil.ParseTypeAndVaildAttrs(containerTypeAndTags);
+            var (containerType, containerTags) = DefUtil.ParseTypeAndVaildAttrs(containerTypeAndTags, conf.GlobalTagsMap);
             string elementTypeAndTags = type.Substring(2);
             return CreateContainerType(module, containerType, containerTags, elementTypeAndTags.Trim());
         }
@@ -297,7 +299,9 @@ public class DefAssembly
         bool nullable = false;
         // 去掉 rawType 两侧的匹配的 ()
         rawType = DefUtil.TrimBracePairs(rawType);
-        var (type, tags) = DefUtil.ParseTypeAndVaildAttrs(rawType);
+        //YK Change,增加全局tag
+        var conf = GenerationContext.GlobalConf;
+        var (type, tags) = DefUtil.ParseTypeAndVaildAttrs(rawType, conf.GlobalTagsMap);
 
         while (true)
         {
@@ -326,7 +330,10 @@ public class DefAssembly
             tags.TryAdd("not-default", "1");
         }
 
-        switch (type)
+        //YK Change, 基本类型，大小写不敏感支持
+        string typeCaseIgnore = type.ToLower();
+
+        switch (typeCaseIgnore)
         {
             case "bool":
                 return TBool.Create(nullable, tags);
@@ -390,7 +397,8 @@ public class DefAssembly
 
     TType CreateContainerType(string module, string containerType, Dictionary<string, string> containerTags, string elementType)
     {
-        switch (containerType)
+        string contaionerTypeCaseIgnore = containerType.ToLower();
+        switch (contaionerTypeCaseIgnore)
         {
             case "array":
             {

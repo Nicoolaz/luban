@@ -36,6 +36,14 @@ internal class Target
     public string TopModule { get; set; }
 }
 
+//YK Add 增加类型全局tag，用于配置默认tag
+internal class TypeGlobalTags
+{
+    public string TypeName {  get; set; }
+
+    public string Tags {  get; set; }
+}
+
 internal class LubanConf
 {
     public List<Group> Groups { get; set; }
@@ -47,6 +55,9 @@ internal class LubanConf
     public List<Target> Targets { get; set; }
 
     public List<string> ExcelDefaultSchema { get; set; }
+
+    // YK Add 增加全局Tag
+    public List<TypeGlobalTags> GlobalTags { get; set; }
 
     public bool GroupsIsChar { get; set; }
 }
@@ -106,6 +117,20 @@ public class GlobalConfigLoader : IConfigLoader
                 importFiles.Add(new SchemaFileInfo() { FileName = subFile, Type = schemaFile.Type });
             }
         }
+
+        Dictionary<string, Dictionary<string, string>> GlobalTags = new Dictionary<string, Dictionary<string, string>>();
+        foreach(var TagInfo in globalConf.GlobalTags)
+        {
+            var tags = DefUtil.ParseAttrs(TagInfo.Tags);
+            if(!GlobalTags.ContainsKey(TagInfo.TypeName))
+            {
+                GlobalTags[TagInfo.TypeName.ToLower()] = tags;   
+            }
+            else
+            {
+                s_logger.Warn($"GlobalTags配置中有重复的Type : {TagInfo.TypeName},会被忽略请检查Conf文件！！");
+            }
+        }
         return new LubanConfig()
         {
             ConfigFileName = configFileName,
@@ -115,6 +140,7 @@ public class GlobalConfigLoader : IConfigLoader
             Imports = importFiles,
             GroupsIsChar = globalConf.GroupsIsChar,
             ExcelDefaultSchema = globalConf.ExcelDefaultSchema ?? new List<string>(),
+            GlobalTagsMap = GlobalTags,
         };
     }
 

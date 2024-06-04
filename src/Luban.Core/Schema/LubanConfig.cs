@@ -15,5 +15,8 @@ public class LubanConfig
 
     public List<string> ExcelDefaultSchema;
 
+    //YK Add 增加全局Tag
+    public Dictionary<string, Dictionary<string, string>> GlobalTagsMap;
+
     public string InputDataDir { get; set; }
 }

@@ -89,7 +89,7 @@ public static class DefUtil
             if (braceDepth == 0 && (c == ',' || c == ';'))
             {
                 var strContainBaseType = firstSharpIndex > 0 ? s.Substring(0, firstSharpIndex) : s.Substring(0, i);
-                strContainBaseType = strContainBaseType.Replace("(", "").Replace(")", "").Replace("[", "").Replace("]", "");
+                strContainBaseType = strContainBaseType.Replace("(", "").Replace(")", "").Replace("[", "").Replace("]", "").ToLower();
 
                 if (strContainBaseType == "array" || strContainBaseType == "list" || strContainBaseType == "set" || strContainBaseType == "map")
                 {
@@ -224,9 +224,21 @@ public static class DefUtil
         }
     }
 
-    public static (string, Dictionary<string, string>) ParseTypeAndVaildAttrs(string s)
+    //YK Change,增加全局默认tag的配置
+    public static (string, Dictionary<string, string>) ParseTypeAndVaildAttrs(string s, Dictionary<string, Dictionary<string, string>> defaultTags = default)
     {
         var (typeStr, attrs) = ParseType(s);
+        
+        if(defaultTags != null && defaultTags.ContainsKey(typeStr.ToLower()))
+        {
+            foreach(var tag in defaultTags[typeStr.ToLower()])
+            {
+                if (!attrs.ContainsKey(tag.Key))
+                {
+                    attrs.Add(tag.Key, tag.Value);
+                }
+            }
+        }
 
         if (attrs.ContainsKey("group"))
         {
