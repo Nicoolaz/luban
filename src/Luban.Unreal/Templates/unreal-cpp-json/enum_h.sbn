@@ -7,6 +7,6 @@ enum class {{__name}} : uint8
         {{~if item.comment != ''~}}
     /** {{escape_comment item.comment}} **/
         {{~end~}}
-    {{format_enum_item_name __code_style item.name}} = {{item.value}} UMETA(DisplayName = "{{__enum.alias_or_name}}"),
+    {{format_enum_item_name __code_style item.name}} = {{item.value}} UMETA(DisplayName = "{{item.alias_or_name}}"),
     {{~end~}}
 };
