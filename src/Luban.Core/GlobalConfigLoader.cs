@@ -119,16 +119,19 @@ public class GlobalConfigLoader : IConfigLoader
         }
 
         Dictionary<string, Dictionary<string, string>> GlobalTags = new Dictionary<string, Dictionary<string, string>>();
-        foreach(var TagInfo in globalConf.GlobalTags)
+        if (globalConf.GlobalTags != null)
         {
-            var tags = DefUtil.ParseAttrs(TagInfo.Tags);
-            if(!GlobalTags.ContainsKey(TagInfo.TypeName))
+            foreach(var TagInfo in globalConf.GlobalTags)
             {
-                GlobalTags[TagInfo.TypeName.ToLower()] = tags;   
-            }
-            else
-            {
-                s_logger.Warn($"GlobalTags配置中有重复的Type : {TagInfo.TypeName},会被忽略请检查Conf文件！！");
+                var tags = DefUtil.ParseAttrs(TagInfo.Tags);
+                if(!GlobalTags.ContainsKey(TagInfo.TypeName))
+                {
+                    GlobalTags[TagInfo.TypeName.ToLower()] = tags;   
+                }
+                else
+                {
+                    s_logger.Warn($"GlobalTags配置中有重复的Type : {TagInfo.TypeName},会被忽略请检查Conf文件！！");
+                }
             }
         }
         return new LubanConfig()

@@ -1,5 +1,6 @@
 ﻿using ExcelDataReader;
 using Luban.Utils;
+using NLog;
 
 namespace Luban.DataLoader.Builtin.Excel;
 
@@ -536,7 +537,7 @@ public static class SheetLoadUtil
                 ++consecutiveEmptyRowCount;
                 if (consecutiveEmptyRowCount > maxEmptyRowCountOfInterruptParse)
                 {
-                    s_logger.Error("excel:{filename} sheet:{sheet} 连续空行超过{}行，可能是数据错误，解析中断", s_curExcel.Value, reader.Name, maxEmptyRowCountOfInterruptParse);
+                    s_logger.Warn("excel:{filename} sheet:{sheet} 连续空行超过{}行，可能是数据错误，解析中断", s_curExcel.Value, reader.Name, maxEmptyRowCountOfInterruptParse);
                     break;
                 }
             }

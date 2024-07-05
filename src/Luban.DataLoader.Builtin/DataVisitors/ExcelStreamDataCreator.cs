@@ -430,7 +430,7 @@ class ExcelStreamDataCreator : ITypeFuncVisitor<ExcelStream, DType>
             }
             catch (Exception e)
             {
-                var dce = new DataCreateException(e, "");
+                var dce = new DataCreateException(e, dict.LastReadDataInfo);
                 dce.Push(bean, f);
                 throw dce;
             }
@@ -444,11 +444,11 @@ class ExcelStreamDataCreator : ITypeFuncVisitor<ExcelStream, DType>
         DictReader d;
         if (!string.IsNullOrEmpty(originBean.Sep))
         {
-            d = new DictReader(x.ReadCellMayNull(), originBean.Sep);
+            d = new DictReader(x.ReadCellMayNull(), originBean.Sep, x.LastReadDataInfo);
         }
         else
         {
-            d = new DictReader(x.ReadCellMayNull(), " :");
+            d = new DictReader(x.ReadCellMayNull(), " :", x.LastReadDataInfo);
         }
 
         if (originBean.IsAbstractType)

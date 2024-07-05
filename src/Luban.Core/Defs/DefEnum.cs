@@ -83,9 +83,12 @@ public class DefEnum : DefTypeBase
         else
         {
             //YK Begin
-            if (_vaule2Name.ContainsKey(0))
+            //如果啥都没填，增加个默认值的机制
+            if (string.IsNullOrWhiteSpace(name) && _vaule2Name.Count > 0)
             {
-                return 0;
+                var Keys = _vaule2Name.Keys.ToList();
+                Keys.Sort();
+                return Keys[0];
             }
             else
             {

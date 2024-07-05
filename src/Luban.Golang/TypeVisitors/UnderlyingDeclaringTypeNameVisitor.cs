@@ -46,7 +46,7 @@ public class UnderlyingDeclaringTypeNameVisitor : ITypeFuncVisitor<string>
 
     public string Accept(TEnum type)
     {
-        return "int32";
+        return type.DefEnum.Name;
     }
 
     public string Accept(TString type)

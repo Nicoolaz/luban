@@ -9,10 +9,13 @@ class DictReader
     private Dictionary<string, Cell> _datas;
     private int _toIndex;
     private int _curIndex;
+
+    public string LastReadDataInfo { get; }
     private int LastReadIndex { get; set; }
 
-    public DictReader(List<Cell> datas, int fromIndex, int toIndex, string sep, string overrideDefault)
+    public DictReader(List<Cell> datas, int fromIndex, int toIndex, string sep, string overrideDefault, string lastReadDataInfo)
     {
+        LastReadDataInfo = lastReadDataInfo;
         if (string.IsNullOrWhiteSpace(sep))
         {
 
@@ -55,8 +58,9 @@ class DictReader
 
     }
 
-    public DictReader(Cell cell, string sep)
+    public DictReader(Cell cell, string sep, string lastReadDataInfo)
     {
+        LastReadDataInfo = lastReadDataInfo;
         if (string.IsNullOrWhiteSpace(sep))
         {
             throw new FormatException($"DictReader read failed string = {cell.Value.ToString()}");
