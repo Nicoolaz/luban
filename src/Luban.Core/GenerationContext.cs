@@ -112,11 +112,12 @@ public class GenerationContext
                 {
                     TBean.Create(false, bean, null).Apply(RefTypeVisitor.Ins, refTypes);
                 }
-                else if (t is DefEnum && NeedExportNotDefault(t.Groups))
+                else if (t is DefEnum)// && NeedExportNotDefault(t.Groups))
                 {
                     refTypes.Add(t.FullName, t);
                 }
             }
+            
         }
 
         foreach (var table in ExportTables)
