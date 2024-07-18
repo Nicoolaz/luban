@@ -79,7 +79,7 @@ public class DefAssembly
                 DefTable table = GetCfgTable(tableName);
                 if (table != null)
                 {
-                    if (NeedExport(table.Groups))
+                    if (NeedExport(table.Groups, groupDefs))
                         _exportTables.Add(table);
                 }
                 else

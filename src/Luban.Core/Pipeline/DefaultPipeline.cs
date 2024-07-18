@@ -184,7 +184,9 @@ public class DefaultPipeline : IPipeline
         content.AppendLine();
         content.Append("}");
         
-        outputManifest.AddFile($"{name}.json", content.ToString());
+        string encoding = EnvManager.Current.GetOptionOrDefault("", BuiltinOptionNames.FileEncoding, true, "");
+        Encoding usedEncoding = string.IsNullOrEmpty(encoding) ? Encoding.UTF8 : System.Text.Encoding.GetEncoding(encoding);
+        outputManifest.AddFile($"{name}.json", content.ToString(), usedEncoding);
         Save(outputManifest);
         
         s_logger.Info("process defined table config: end");

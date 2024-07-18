@@ -113,5 +113,10 @@ namespace Luban.CSharp.TypeVisitors
             string __json = $"__json{depth}";
             return @$"{{ var {__json} = {json}; {x} = new {type.Apply(DeclaringTypeNameVisitor.Ins)}(({__json} as JArray).Count); foreach(JToken {__e} in {__json}) {{ {type.KeyType.Apply(DeclaringTypeNameVisitor.Ins)} {__k};  {type.KeyType.Apply(this, $"{__e}[0]", __k, depth + 1)} {type.ValueType.Apply(DeclaringTypeNameVisitor.Ins)} {__v};  {type.ValueType.Apply(this, $"{__e}[1]", __v, depth + 1)}  {x}.Add({__k}, {__v}); }}   }}";
         }
+
+        public string Accept(TUint type, string x, string y, int z)
+        {
+            return $"{y} = (unit){x};";
+        }
     }
 }

@@ -74,6 +74,11 @@ namespace Luban.Typescript.TypeVisitors
             return $"{{ let n = Math.min({bufVarName}.ReadSize(), {bufVarName}.Size); {fieldName} = new {type.Apply(DeclaringTypeNameVisitor.Ins)}(); for(let i = 0 ; i < n ; i++) {{ let _k{depth}; {type.KeyType.Apply(this, bufVarName, $"_k{depth}", depth + 1)};  let _v{depth};  {type.ValueType.Apply(this, bufVarName, $"_v{depth}", depth + 1)}; {fieldName}.set(_k{depth}, _v{depth});  }} }}";
         }
 
+        public string Accept(TUint type, string bufVarName, string fieldName, int depth)
+        {
+            throw new NotSupportedException();
+        }
+
         public string Accept(TDateTime type, string bufVarName, string fieldName, int depth)
         {
             return $"{fieldName} = {bufVarName}.ReadLongAsNumber()";
