@@ -31,6 +31,11 @@
         <OutputType>Exe</OutputType>
         <PublishAOT>true</PublishAOT>
         <Platforms>AnyCPU</Platforms>
+        <RepositoryUrl>https://github.com/focus-creative-games/luban</RepositoryUrl>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackAsTool>True</PackAsTool>
+        <FileVersion>$(AssemblyVersion)</FileVersion>
+        <Version>2.13.0</Version>
     </PropertyGroup>
 
     <ItemGroup>
@@ -64,6 +69,13 @@
 
     <ItemGroup>
       <Folder Include="Plugin\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Include="..\..\README.md">
+        <Pack>True</Pack>
+        <PackagePath>\</PackagePath>
+      </None>
     </ItemGroup>
 
     <ItemGroup>

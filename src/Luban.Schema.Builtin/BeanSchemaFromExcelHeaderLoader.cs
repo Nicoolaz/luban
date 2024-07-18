@@ -25,13 +25,36 @@ public class BeanSchemaFromExcelHeaderLoader : IBeanSchemaLoader
             Groups = new(),
             Fields = new(),
         };
-
+        
         cb.Tags = new Dictionary<string, string>();
         cb.Tags["IsTableBean"] = "true";
         cb.SourceFileName = fileName;
 
+
         (var actualFile, var sheetName) = FileUtil.SplitFileAndSheetName(FileUtil.Standardize(fileName));
+
+        if (!File.Exists(actualFile))
+        {
+            if (Directory.Exists(fileName))
+            {
+                var files = FileUtil.GetFileOrDirectory(fileName);
+                if (files.Count == 0)
+                {
+                    throw new Exception($"directory:{fileName} is empty!");
+                }
+                else
+                {
+                    actualFile = files[0];
+                }
+            }
+            else
+            {
+                throw new Exception($"file or directory:{fileName} not exists!");
+            } 
+        }
+
         using var inputStream = new FileStream(actualFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+
         var tableDefInfo = SheetLoadUtil.LoadSheetTableDefInfo(actualFile, sheetName, inputStream);
         
         foreach (var (name, f) in tableDefInfo.FieldInfos)
